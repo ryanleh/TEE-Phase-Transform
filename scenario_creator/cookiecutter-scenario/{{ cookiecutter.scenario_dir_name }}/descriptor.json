@@ -7,22 +7,13 @@
       {{ cookiecutter.supported_platforms }},
       "schema": {
         "type": "object",
-        "required": ["first_parameter"],
+        "required": {{ cookiecutter.required_params}},
         "properties": {
-          "first_parameter": {
-            "title": "First Parameter",
-            "type": "string"
-          }
+          {{cookiecutter.schema_properties}}
         }
       },
       "form": [
-        {
-          "key": "first_parameter",
-          "type": "text",
-          "feedback": false,
-          "placeholder": "Who do you want to say hello to?",
-          "validationMessage": "Please enter a valid string"
-        }
+        {{cookiecutter.form_parameters}}
       ]
     }
   ]

@@ -1,4 +1,4 @@
 
 {
-  "first_parameter" : "world"
+  {{ cookiecutter.model_parameters }}
 }

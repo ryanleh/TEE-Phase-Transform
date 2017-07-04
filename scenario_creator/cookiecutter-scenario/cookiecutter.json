@@ -1,16 +1,24 @@
 {
-  "python" : "",
-  "scenario_dir_name": "",
+  "scenario_dir_name" : "",
 
   "scenario_name": "",
   "scenario_file_name": "",
   "scenario_class_name": "",
   "scenario_description": "",
-  "scenario_guid": "",
+  "scenario_tid": "",
   "scenario_type": "",
   "supported_platforms": "",
 
-  "phase_import_statements": "",
-  "phase_initialize_execute_statements": ""
+  "required_params": "",
+  "schema_properties": "",
+  "form_parameters": "",
+
+
+  "scenario_run": "",
+  "scenario_setup": "",
+
+
+  "model_parameters":"",
+  "phase_import_statements":""
 
 }
