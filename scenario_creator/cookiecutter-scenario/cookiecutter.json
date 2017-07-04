@@ -1,0 +1,16 @@
+{
+  "python" : "",
+  "scenario_dir_name": "",
+
+  "scenario_name": "",
+  "scenario_file_name": "",
+  "scenario_class_name": "",
+  "scenario_description": "",
+  "scenario_guid": "",
+  "scenario_type": "",
+  "supported_platforms": "",
+
+  "phase_import_statements": "",
+  "phase_initialize_execute_statements": ""
+
+}

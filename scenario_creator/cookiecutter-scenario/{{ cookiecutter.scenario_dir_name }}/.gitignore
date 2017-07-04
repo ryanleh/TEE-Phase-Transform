@@ -1,0 +1,6 @@
+/target
+*.pyc
+*.luac
+/.idea
+venv
+descriptor-processed.json
