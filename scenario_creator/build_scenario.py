@@ -1,6 +1,7 @@
 import os
 
 from phase_params import PhaseParams
+from main_generator import Scenario
 
 phase_dir = "/home/ryan/projects/scenario_creator/cookiecutter-scenario/{{ cookiecutter.scenario_dir_name }}/bin/ai_utils/phases"
 
@@ -37,8 +38,6 @@ class ScenarioBuilder(object):
 
 
 
-
-
     def _generateMain(self):
         """
         Generate main.py
@@ -51,8 +50,13 @@ class ScenarioBuilder(object):
 
     def Run(self):
         """
-        Main program function
+        Main program function --> NEED TO PUT IT CHECKS FOR INPUT
         """
+        scenario_name = raw_input("What do you want to name the scenario? ")
+        scenario_type = input("Is this scenario an attack(1) or a validation(2)?")
+        scenario_description = raw_input("How do you want to describe the scenario? ")
+
+        scenario = Scenario(scenario_name, scenario_type, scenario_description)
 
         phases = []
         num_of_phases = input("How many phases do you want? ")

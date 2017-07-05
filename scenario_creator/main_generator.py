@@ -4,13 +4,13 @@
 Build main.py based on phase objects
 """
 class Scenario(object):
-    def __init__(self):
-        pass
+    def __init__(self, subject, type, description):
 
-    def _getInfo(self):
-        """
-        Get TID, subject, type, and description
-        """
+        # TODO: make a generating tid
+        self.tid = '123'
+        self.subject = subject
+        self.type = type
+        self.description = description
 
     def _makeRun(self):
         """
