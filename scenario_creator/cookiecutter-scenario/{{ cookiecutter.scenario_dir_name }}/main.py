@@ -18,8 +18,8 @@ class {{ cookiecutter.scenario_class_name }}(AbstractScenarioClass):
     def Setup(self, model):
         {{ cookiecutter.scenario_setup}}
 
-    def run(*args):
-        ScenarioExecutorClass().Run()
+def run(*args):
+    ScenarioExecutorClass().Run()
 
 
 if __name__ == "__main__":
