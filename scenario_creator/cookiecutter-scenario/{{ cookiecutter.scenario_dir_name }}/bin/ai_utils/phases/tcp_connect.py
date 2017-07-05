@@ -8,14 +8,12 @@ class Tcp_connectPhaseClass(AbstractPhaseClass):
   Subject = "tcp_connect"
   Description = "Test scenario that sends a message over TCP"
 
-  def __init__(self, isPhaseCritical, model):
+  def __init__(self, isPhaseCritical, ip, port, message = "Hello World!"):
     AbstractPhaseClass.__init__(self, isPhaseCritical)
-    self.ip = model.get('Host IP')
-    self.port = model.get('Host Port')
-    if model.get('Message'):
-      self.message = model.get('Message')
-    else:
-      self.message = "Hello World!"
+    self.ip = ip
+    self.port = port
+    self.message = message
+
 
   def Setup(self):
     """
@@ -83,7 +81,7 @@ class Tcp_connectPhaseClass(AbstractPhaseClass):
 
   def Run(self):
 
-    self.PhaseReporter.Info('Starting TCP_connect phase with options: {} {}'.format(self.ip, self.port))
+    self.PhaseReporter.Info('Starting TCP_connect phase with options: {} {} {}'.format(self.ip, self.port, self.message))
     phaseSuccess = self.run()
     self.PhaseReporter.Info('Phase result: {}'.format(phaseSuccess))
     return phaseSuccess
