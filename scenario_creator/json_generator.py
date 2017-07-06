@@ -11,15 +11,6 @@ class JsonFiles(object):
     def _generateDescriptor(self):
         """
         Generate descriptor.json
-
-        for param in params:
-            schema_properties += sample_property.format(param.title) + ',\n'
-            form_parameters += sample_form.format(param.title, "Please enter a valid" + param.title)
-
-        --> something like this... have to come up with solution for commas
-            after json object
-
-        https://stackoverflow.com/questions/23110383/how-to-dynamically-build-a-json-object-with-python
         """
 
         sample_property = """first_parameter": {
@@ -37,6 +28,15 @@ class JsonFiles(object):
 
         schema_properties = ""
         form_parameters = ""
+
+        """for param in params:
+            schema_properties += sample_property.format(param.title) + ',\n'
+            form_parameters += sample_form.format(param.title, "Please enter a valid" + param.title)
+
+        --> something like this... have to come up with solution for commas
+            after json object
+
+        https://stackoverflow.com/questions/23110383/how-to-dynamically-build-a-json-object-with-python"""
 
 
 

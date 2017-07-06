@@ -2,9 +2,10 @@ import traceback
 import sys
 import os
 import importlib
+import re
 
 """
-Phase object should have filename, classname, imports, required param, and optional
+Phase object should have filename, class name, imports, required param, and optional
 params as variables
 """
 
@@ -19,24 +20,28 @@ class PhaseParams(object):
         self.path = phase_path
 
         self.imports = self._filterImports()
-        self.req_params = self._getRequiredParams()
-        self.opt_params = self._getOptionalParams()
+        self.req_params, self.opt_params = self._getParams()
+
 
 
     def _getImports(self):
         """
         Returns all imports
 
-        >>> PhaseParams._getImports(PhaseParams("tcp_connect.py","/home/ryan/projects/scenario_creator/cookiecutter-scenario/{{ cookiecutter.scenario_dir_name }}/bin/ai_utils/phases/tcp_connect.py"))
+        >>> PhaseParams("tcp_connect.py", '/home/ryan/projects/scenario_creator/cookiecutter-scenario/{{ cookiecutter'\
+                '.scenario_dir_name }}/bin/ai_utils/phases/tcp_connect.py')._getImports()
         ['ai_utils.phases.abstract_phase', 'socket']
 
-        >>> PhaseParams._getImports(PhaseParams("crack_hash.py","/home/ryan/projects/scenario_creator/cookiecutter-scenario/{{ cookiecutter.scenario_dir_name }}/bin/ai_utils/phases/crack_hash.py"))
+
+        >>> PhaseParams("crack_hash.py", '/home/ryan/projects/scenario_creator/cookiecutter-scenario/{{ cookiecutter'\
+                '.scenario_dir_name }}/bin/ai_utils/phases/crack_hash.py')._getImports()
         ['ai_utils.phases.abstract_phase', 'logging', 'Hash_Cracker']
 
-        >>> PhaseParams._getImports(PhaseParams("tcp_connect", "/home/ryan/projects/scenario_creator/cookiecutter-scenario/{{ cookiecutter.scenario_dir_name }}/bin/ai_utils/phases/tcp_connect"))
+        >>> PhaseParams("tcp_connec.py", '/home/ryan/projects/scenario_creator/cookiecutter-scenario/{{ cookiecutter'\
+                '.scenario_dir_name }}/bin/ai_utils/phases/tcp_connec.py')._getImports() #doctest: +ELLIPSIS
         Traceback (most recent call last):
          ...
-        IOError: [Errno 2] No such file or directory: '/home/ryan/projects/scenario_creator/cookiecutter-scenario/{{ cookiecutter.scenario_dir_name }}/bin/ai_utils/phases/tcp_connect'
+        IOError: [Errno 2] No such file or directory:...
         """
         imports = []
 
@@ -48,15 +53,19 @@ class PhaseParams(object):
             elif line[:4] == "from":
                 imports.append(line.split(" ")[1].rstrip("\n"))
 
+        file.close()
+
         return imports
 
     def _filterImports(self):
         """
         Removes any imports in Python stdlib or ai_utils
 
-        >>> PhaseParams._filterImports(PhaseParams("tcp_connect.py","/home/ryan/projects/scenario_creator/cookiecutter-scenario/{{ cookiecutter.scenario_dir_name }}/bin/ai_utils/phases/tcp_connect.py"))
+        >>> PhaseParams("tcp_connect.py", '/home/ryan/projects/scenario_creator/cookiecutter-scenario/{{ cookiecutter'\
+                '.scenario_dir_name }}/bin/ai_utils/phases/tcp_connect.py')._filterImports()
         []
-        >>> PhaseParams._filterImports(PhaseParams("crack_hash","/home/ryan/projects/scenario_creator/cookiecutter-scenario/{{ cookiecutter.scenario_dir_name }}/bin/ai_utils/phases/crack_hash.py"))
+        >>> PhaseParams("crack_hash.py", '/home/ryan/projects/scenario_creator/cookiecutter-scenario/{{ cookiecutter'\
+                '.scenario_dir_name }}/bin/ai_utils/phases/crack_hash.py')._filterImports()
         ['Hash_Cracker']
 
         """
@@ -82,27 +91,34 @@ class PhaseParams(object):
         return imports
 
 
-    def _getRequiredParams(self):
+    def _getParams(self):
         """
-        Returns mandatory Params requested by __init__ of phase
+        Grabs and sorts phase arguments
 
-        >>> PhaseParams._getRequiredParams(PhaseParams("tcp_connect.py","/home/ryan/projects/scenario_creator/cookiecutter-scenario/{{ cookiecutter.scenario_dir_name }}/bin/ai_utils/phases/tcp_connect.py"))
-        ['ip', 'port']
+        >>> PhaseParams("tcp_connect.py", '/home/ryan/projects/scenario_creator/cookiecutter-scenario/{{ cookiecutter'\
+                '.scenario_dir_name }}/bin/ai_utils/phases/tcp_connect.py')._getParams()
+        (['ip', 'port'], ['message'])
+
         """
         req_params = []
-
-        return req_params
-
-    def _getOptionalParams(self):
-        """
-        Returns mandatory Params requested by __init__ of phase
-
-        >>> PhaseParams._getOptionalParams(PhaseParams("tcp_connect.py","/home/ryan/projects/scenario_creator/cookiecutter-scenario/{{ cookiecutter.scenario_dir_name }}/bin/ai_utils/phases/tcp_connect.py"))
-        ['message']
-        """
         opt_params = []
 
-        return opt_params
+        # Pretty rudimentary implementation... TODO: more elegant solution
+
+        file = open(self.path)
+        for line in file:
+            line = line.lstrip()
+            if line[:13] == "def __init__(":
+                arg_list = re.search('def __init__\((.+?)\):', line).group(1).split(",")[2:]
+                for arg in arg_list:
+                    if "=" not in arg:
+                        req_params.append(arg.lstrip())
+                    else:
+                        opt_params.append(arg.lstrip().split("=")[0].rstrip(" "))
+
+        return req_params, opt_params
+
+
 
 
 

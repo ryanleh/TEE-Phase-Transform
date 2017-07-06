@@ -2,6 +2,7 @@ import os
 
 from phase_params import PhaseParams
 from main_generator import Scenario
+from pprint import pprint
 
 phase_dir = "/home/ryan/projects/scenario_creator/cookiecutter-scenario/{{ cookiecutter.scenario_dir_name }}/bin/ai_utils/phases"
 
@@ -21,6 +22,12 @@ class ScenarioBuilder(object):
     def _getPhaseObject(self, phase_name):
         """
         Grab all requested Phase Objects
+
+        >>> ScenarioBuilder._getPhaseObject(ScenarioBuilder(),"tcp_connect") #doctest: +ELLIPSIS
+        <phase_params.PhaseParams object at 0x...>
+
+        >>> ScenarioBuilder._getPhaseObject(ScenarioBuilder(),"tcp_con") #doctest: +ELLIPSIS
+        IO Error: [Errno 2] No such file or directory:...
         """
 
         if phase_name[-3:] != ".py":
@@ -50,7 +57,7 @@ class ScenarioBuilder(object):
 
     def Run(self):
         """
-        Main program function --> NEED TO PUT IT CHECKS FOR INPUT
+        Main program function --> NEED TO PUT IN CHECKS FOR INPUT
         """
         scenario_name = raw_input("What do you want to name the scenario? ")
         scenario_type = input("Is this scenario an attack(1) or a validation(2)?")
@@ -64,8 +71,10 @@ class ScenarioBuilder(object):
             phase_name = raw_input("What is the phase {}'s file name? ".format(i))
             phases.append(self._getPhaseObject(phase_name))
 
-
-
+        for phase in phases:
+            pprint(vars(phase))
 
 
 ScenarioBuilder().Run()
+
+
