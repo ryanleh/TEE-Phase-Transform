@@ -12,9 +12,8 @@
           {{cookiecutter.schema_properties}}
         }
       },
-      "form": [
-        {{cookiecutter.form_parameters}}
-      ]
+      "form": {{cookiecutter.form_parameters}}
+
     }
   ]
 }

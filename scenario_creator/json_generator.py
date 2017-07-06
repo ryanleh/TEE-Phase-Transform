@@ -1,55 +1,67 @@
 
-
+import json
 
 """
 Builds descriptor.json and model.json from parameter lists
 """
 class JsonFiles(object):
-    def __init__(self):
-        pass
+    def __init__(self, req_params, opt_params):
+        self.params = req_params + opt_params
 
-    def _generateDescriptor(self):
+    def generateDescriptorSchema(self):
         """
         Generate descriptor.json
+
+        TODO: Fix this multiline crap
+
+        >>> JsonFiles(['req1', 'req2'],['opt1']).generateDescriptorSchema()
+        '{"opt1": {"type": "string", "title": "opt1"}, "req1": {"type": "string", "title": "req1"}, "req2": {"type": "string", "title": "req2"}}'
+
         """
 
-        sample_property = """first_parameter": {
-                                "title": {},
-                                "type": "string"
-                            }"""
+        schema_properties = {}
 
-        sample_form = """{
-                        "key": {},
-                        "type": "text",
-                        "feedback": false,
-                        "placeholder": "",
-                        "validationMessage": {}
-                        }"""
-
-        schema_properties = ""
-        form_parameters = ""
-
-        """for param in params:
-            schema_properties += sample_property.format(param.title) + ',\n'
-            form_parameters += sample_form.format(param.title, "Please enter a valid" + param.title)
-
-        --> something like this... have to come up with solution for commas
-            after json object
-
-        https://stackoverflow.com/questions/23110383/how-to-dynamically-build-a-json-object-with-python"""
+        for param in self.params:
+            schema_properties[param] = {"title": param, "type": "string"}
 
 
+        # TODO: add indent
+        return json.dumps(schema_properties)
 
-    def _generateModel(self):
+
+    def generateDescriptorForm(self):
+        """
+        form: return list of json dumps of dictionaries
+
+        >>> JsonFiles(['req1', 'req2'],['opt1']).generateDescriptorForm()
+        ['{"placeholder": "", "type": "text", "feedback": false, "key": "req1", "validationMessage": ""}', '{"placeholder": "", "type": "text", "feedback": false, "key": "req2", "validationMessage": ""}', '{"placeholder": "", "type": "text", "feedback": false, "key": "opt1", "validationMessage": ""}']
+        """
+
+        form_parameters = []
+
+        for param in self.params:
+            form_parameters.append(json.dumps({"key": param, "type": "text", "feedback": False, "placeholder": "",
+                                                "validationMessage": ""}))
+
+
+        # TODO: add indent
+        return form_parameters
+
+
+    def generateModel(self):
         """
         Generate model.json
 
-        for param in params:
-            model_parameters += sample_parameter.format(param.title) + ',\n'
+        >>> JsonFiles(['req1', 'req2'],['opt1']).generateModel()
+        '{"opt1": "", "req1": "", "req2": ""}'
 
-        -->same comma issue as above
         """
         # Eventually add some global param that can fill in the
         # description part
-        sample_parameter = "{} : ''"
-        model_parameters = ""
+        model_parameters = {}
+
+        for param in self.params:
+            model_parameters[param] = ''
+
+        # TODO: add indent
+        return json.dumps(model_parameters)

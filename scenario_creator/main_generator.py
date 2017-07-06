@@ -2,8 +2,10 @@
 
 """
 Build main.py based on phase objects
+
+Make naming consistent?
 """
-class Scenario(object):
+class Main(object):
     def __init__(self, subject, type, description):
 
         # TODO: make a generating tid
@@ -26,7 +28,7 @@ class Scenario(object):
         Write code to check if required params exist within model.json
         """
 
-    def makeScenario(self, phases):
+    def makeMain(self, phases):
         """
-        Make scenario based off phases object
+        Make Main based off phases object
         """

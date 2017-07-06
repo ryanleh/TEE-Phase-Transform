@@ -1,23 +1,50 @@
 import os
 
 from phase_params import PhaseParams
-from main_generator import Scenario
-from pprint import pprint
+from main_generator import Main
+from json_generator import JsonFiles
+from cookiecutter.main import cookiecutter
 
+
+# TODO: Make these dynamic
 phase_dir = "/home/ryan/projects/scenario_creator/cookiecutter-scenario/{{ cookiecutter.scenario_dir_name }}/bin/ai_utils/phases"
-
+template_dir = "/home/ryan/projects/scenario_creator/cookiecutter-scenario/"
 
 """
 Builds directory and generates all necessary files
 """
 class ScenarioBuilder(object):
     def __init__(self):
-        pass
+        self.req_params = []
+        self.opt_params = []
 
-    def _buildDir(self):
+    def _buildContext(self):
         """
-        Builds Scenario file directory
+        Builds Cookiecutter context json object
         """
+
+        context = {
+            "scenario_dir_name": self.main.subject,
+
+
+            "scenario_description": self.main.description,
+            "scenario_tid": self.main.tid,
+            "scenario_type": self.main.type,
+            "supported_platforms": "{'ubuntu': '>=0.0', 'debian': '>=0.0', 'redhat': '>=0.0', 'linuxmint': '>=0.0', 'windows': '>=6.0', 'osx': '>=0.0'}",
+
+            "required_params": self.req_params,
+            "schema_properties": self.jsonGen.generateDescriptorSchema(),
+            "form_parameters": self.jsonGen.generateDescriptorForm(),
+
+            "scenario_run": "",
+            "scenario_setup": "",
+
+            "model_parameters": self.jsonGen.generateModel(),
+            "phase_import_statements": ""
+        }
+
+        return context
+
 
     def _getPhaseObject(self, phase_name):
         """
@@ -44,7 +71,6 @@ class ScenarioBuilder(object):
         return PhaseParams(phase_name, phase_path)
 
 
-
     def _generateMain(self):
         """
         Generate main.py
@@ -63,7 +89,7 @@ class ScenarioBuilder(object):
         scenario_type = input("Is this scenario an attack(1) or a validation(2)?")
         scenario_description = raw_input("How do you want to describe the scenario? ")
 
-        scenario = Scenario(scenario_name, scenario_type, scenario_description)
+        self.main = Main(scenario_name, scenario_type, scenario_description)
 
         phases = []
         num_of_phases = input("How many phases do you want? ")
@@ -72,7 +98,14 @@ class ScenarioBuilder(object):
             phases.append(self._getPhaseObject(phase_name))
 
         for phase in phases:
-            pprint(vars(phase))
+            self.req_params = self.req_params + phase.req_params
+            self.opt_params = self.opt_params + phase.opt_params
+
+        self.jsonGen = JsonFiles(self.req_params, self.opt_params)
+
+        self.Context = self._buildContext()
+
+        cookiecutter(template_dir, no_input=True,extra_context=self.Context)
 
 
 ScenarioBuilder().Run()
