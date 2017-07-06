@@ -73,6 +73,7 @@ class PhaseParams(object):
 
         # Find a more elegant solution pls
         i = len(imports) - 1
+        tmp_path = sys.path
         lib_path = os.path.dirname(traceback.__file__)
         sys.path = [lib_path]
         while(i >= 0):
@@ -86,7 +87,7 @@ class PhaseParams(object):
             except ImportError:
                 pass
             i -= 1
-
+        sys.path = tmp_path
 
         return imports
 
