@@ -1,0 +1,19 @@
+{
+  "resources": [
+    {
+      "engine": "ai_python.exe",
+      "entryscript": "main.py",
+      "scenario_type": 1,
+      "supported_platforms": {"ubuntu": ">=0.0", "debian": ">=0.0", "redhat": ">=0.0", "linuxmint": ">=0.0", "windows": ">=6.0", "osx": ">=0.0"},
+      "schema": {
+        "type": "object",
+        "required":["ip", "port"],
+        "properties":
+          {"ip": {"type": "string", "title": "ip"}, "message": {"type": "string", "title": "message"}, "port": {"type": "string", "title": "port"}}
+
+      },
+      "form": [{"placeholder": "", "type": "text", "feedback": false, "key": "ip", "validationMessage": ""}, {"placeholder": "", "type": "text", "feedback": false, "key": "port", "validationMessage": ""}, {"placeholder": "", "type": "text", "feedback": false, "key": "message", "validationMessage": ""}]
+
+    }
+  ]
+}

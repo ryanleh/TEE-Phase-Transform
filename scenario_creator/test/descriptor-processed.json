@@ -1,0 +1,73 @@
+{
+  "phases": [
+    {
+      "trackerId": "PHS-e79ea5e8-5aac-11e7-b3e3-000c29c2ba76", 
+      "description": "Test scenario that sends a message over TCP", 
+      "subject": "tcp_connect"
+    }
+  ], 
+  "sourceUrl": "", 
+  "description": "test", 
+  "trackerId": "123", 
+  "aiPhaseIds": "#PHS-e79ea5e8-5aac-11e7-b3e3-000c29c2ba76", 
+  "resources": [
+    {
+      "engine": "ai_python.exe", 
+      "scenario_type": 1, 
+      "form": [
+        {
+          "type": "text", 
+          "placeholder": "", 
+          "feedback": false, 
+          "key": "ip", 
+          "validationMessage": ""
+        }, 
+        {
+          "type": "text", 
+          "placeholder": "", 
+          "feedback": false, 
+          "key": "port", 
+          "validationMessage": ""
+        }, 
+        {
+          "type": "text", 
+          "placeholder": "", 
+          "feedback": false, 
+          "key": "message", 
+          "validationMessage": ""
+        }
+      ], 
+      "entryscript": "main.py", 
+      "supported_platforms": {
+        "osx": ">=0.0", 
+        "redhat": ">=0.0", 
+        "windows": ">=6.0", 
+        "linuxmint": ">=0.0", 
+        "ubuntu": ">=0.0", 
+        "debian": ">=0.0"
+      }, 
+      "schema": {
+        "required": [
+          "ip", 
+          "port"
+        ], 
+        "type": "object", 
+        "properties": {
+          "ip": {
+            "type": "string", 
+            "title": "ip"
+          }, 
+          "message": {
+            "type": "string", 
+            "title": "message"
+          }, 
+          "port": {
+            "type": "string", 
+            "title": "port"
+          }
+        }
+      }
+    }
+  ], 
+  "subject": "test"
+}
