@@ -22,7 +22,7 @@ class ScenarioBuilder(object):
         self.req_params = []
         self.opt_params = []
         self.imports = []
-        self.phase_names = []
+        self.phases = []
 
     def _buildContext(self):
         """
@@ -36,21 +36,22 @@ class ScenarioBuilder(object):
             "scenario_description": self.main.description,
             "scenario_tid": self.main.tid,
             "scenario_type": self.main.type,
-            "supported_platforms": "{'ubuntu': '>=0.0', 'debian': '>=0.0', 'redhat': '>=0.0', 'linuxmint': '>=0.0', 'windows': '>=6.0', 'osx': '>=0.0'}",
+            "supported_platforms": '{"ubuntu": ">=0.0", "debian": ">=0.0", "redhat": ">=0.0", "linuxmint": ">=0.0", "windows": ">=6.0", "osx": ">=0.0"}',
 
-            "required_params": self.req_params,
+            "required_params": self.string,
             "schema_properties": self.jsonGen.generateDescriptorSchema(),
             "form_parameters": self.jsonGen.generateDescriptorForm(),
 
-            "scenario_run": "",
-            "scenario_setup": "",
+            "scenario_run": self.main._makeRun(),
+            "scenario_setup": self.main._makeSetup(),
+            "scenario_init": self.main._makeInit(),
 
             "model_parameters": self.jsonGen.generateModel(),
             "phase_import_statements": ""
         }
 
-        for phase_name in self.phase_names:
-            self.context["phase_import_statements"] += "import {}\n".format(phase_name)
+        for phase in self.phases:
+            self.context["phase_import_statements"] += "from ai_utils.phases.{} import {}\n".format(phase.name, phase.class_name)
 
 
     def _getPhaseObject(self, phase_name):
@@ -65,9 +66,9 @@ class ScenarioBuilder(object):
         """
 
         if phase_name[-3:] != ".py":
-            phase_name += ".py"
-
-        phase_path = os.path.join(phase_dir, phase_name)
+            phase_path = os.path.join(phase_dir, phase_name + '.py')
+        else:
+            phase_path = os.path.join(phase_dir, phase_name)
 
         try:
             open(phase_path)
@@ -78,15 +79,19 @@ class ScenarioBuilder(object):
         return PhaseParams(phase_name, phase_path)
 
 
-    def _generateMain(self):
+    def _moveDependencies(self):
         """
-        Generate main.py
+        Move necessary libraries and phases into scenario directory
         """
+        # TODO: figure out 'correct' way to find these directories
+        try:
+            shutil.copytree(library_dir, os.path.join(builder_root, self.main.subject + '/bin'))
 
-    def _generateJson(self):
-        """
-        Generate Json files
-        """
+        except OSError as exc:
+            if exc.errno == errno.ENOTDIR:
+                shutil.copy(library_dir, os.path.join(builder_root, self.main.subject + '/bin'))
+
+
 
     def Run(self):
         """
@@ -98,34 +103,32 @@ class ScenarioBuilder(object):
         scenario_type = input("Is this scenario an attack (1) or a validation (2)? ")
         scenario_description = raw_input("How do you want to describe the scenario? ")
 
-        self.main = Main(scenario_name, scenario_type, scenario_description)
 
-        phases = []
         num_of_phases = input("How many phases do you want? ")
         for i in range(1, num_of_phases + 1):
             phase_name = raw_input("What is the phase {}'s file name? ".format(i))
-            phases.append(self._getPhaseObject(phase_name))
+            self.phases.append(self._getPhaseObject(phase_name))
 
-        for phase in phases:
+        for phase in self.phases:
             self.req_params += phase.req_params
             self.opt_params += phase.opt_params
             self.imports = phase.imports
-            self.phase_names.append(phase.name[:-3])
+
+        # Have to format req_params TODO: get rid of this pls
+        string = ""
+        for param in self.req_params:
+            string += '"{}", '.format(param)
+        self.string = string[:-2]
+
+        self.main = Main(scenario_name, scenario_type, scenario_description, self.phases)
 
         self.jsonGen = JsonFiles(self.req_params, self.opt_params)
         self._buildContext()
 
         cookiecutter(template_dir, no_input=True, extra_context=self.context)
+        self._moveDependencies()
 
 
-        # TODO: figure out correct way to find these directories
-        try:
-            print(library_dir)
-            print(os.path.join(builder_root, self.main.subject))
-            shutil.copytree(library_dir, os.path.join(builder_root, self.main.subject + '/bin'))
-        except OSError as exc:
-            if exc.errno == errno.ENOTDIR:
-                shutil.copy(library_dir, os.path.join(builder_root, self.main.subject + '/bin'))
 
 
 

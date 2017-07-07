@@ -21,6 +21,7 @@ class PhaseParams(object):
 
         self.imports = self._filterImports()
         self.req_params, self.opt_params = self._getParams()
+        self.class_name = self._getClassname()
 
 
 
@@ -119,6 +120,19 @@ class PhaseParams(object):
 
         return req_params, opt_params
 
+    def _getClassname(self):
+        """
+        Grabs phase class name
+        """
+
+        # TODO: more elegant solution
+
+
+        file = open(self.path)
+        for line in file:
+            line = line.lstrip()
+            if line[:5] == "class":
+                return re.search('class (.+?)\(', line).group(1)
 
 
 

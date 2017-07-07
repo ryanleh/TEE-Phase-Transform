@@ -4,15 +4,15 @@
       "engine": "ai_python.exe",
       "entryscript": "main.py",
       "scenario_type": {{ cookiecutter.scenario_type }},
-      {{ cookiecutter.supported_platforms }},
+      "supported_platforms": {{ cookiecutter.supported_platforms }},
       "schema": {
         "type": "object",
-        "required": {{ cookiecutter.required_params}},
-        "properties": {
+        "required":[{{ cookiecutter.required_params}}],
+        "properties":
           {{cookiecutter.schema_properties}}
-        }
+
       },
-      "form": {{cookiecutter.form_parameters}}
+      "form": [{{cookiecutter.form_parameters}}]
 
     }
   ]

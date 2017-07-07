@@ -10,12 +10,12 @@ class {{ cookiecutter.scenario_dir_name }}(AbstractScenarioClass):
 
     def __init__(self, model):
         AbstractScenarioClass.__init__(self)
-        Setup(model)
+        {{ cookiecutter.scenario_init }}
 
     def Run(self):
         {{ cookiecutter.scenario_run }}
 
-    def Setup(self, model):
+    def Setup(self):
         {{ cookiecutter.scenario_setup}}
 
 def run(*args):

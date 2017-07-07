@@ -43,6 +43,10 @@ class JsonFiles(object):
             form_parameters.append(json.dumps({"key": param, "type": "text", "feedback": False, "placeholder": "",
                                                 "validationMessage": ""}))
 
+        string = ""
+        for param in form_parameters:
+            string += '{}, '.format(param)
+        form_parameters = string[:-2]
 
         # TODO: add indent
         return form_parameters
