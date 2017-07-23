@@ -1,13 +1,8 @@
 
-
 """
 Build main.py based on phase objects
 
-Make naming consistent?  Also, not implementing optional and required parameters + critical phase...fix
-
--setup could help decide how the class will be called based on which args are there
-
-also put in a break if args aren't there
+No checks in place for whether an argument was in the model
 """
 class Main(object):
     def __init__(self, subject, type, description, phases):
@@ -18,6 +13,10 @@ class Main(object):
         self.type = type
         self.description = description
         self.phases = phases
+        self.phase_params = []
+
+        for phase in phases:
+            self.phase_params += [param for param in phase.req_params + phase.opt_params]
 
 
     def _makeRun(self):
@@ -26,19 +25,21 @@ class Main(object):
         """
         run = ""
 
-        # TODO:More elegant tab solution
         for phase in self.phases:
-            phase_params = ["self." + param for param in phase.req_params + phase.opt_params]
+            phase_params = ["self." + param for param in self.phase_params]
             params = ", ".join(phase_param for phase_param in phase_params)
-            run += "{} = {}(True, {})\n        {}.Execute()\n        ".format(phase.name, phase.class_name, params, phase.name)
+            run += "{} = {}(True, {})\n\t{}.Execute()\n\t".format(phase.name, phase.class_name, params, phase.name)
 
         return run
 
     def _makeSetup(self):
         """
         Write code to check if required params exist within model
+
+        Somehow use GlobalParams to typeface and check args
         """
         return "return True"
+
 
     def _makeInit(self):
         """
@@ -46,12 +47,8 @@ class Main(object):
         """
 
         init = ""
-        phase_params = []
 
-        for phase in self.phases:
-            phase_params += [param for param in phase.req_params + phase.opt_params]
-
-        for param in phase_params:
-            init += "self.{0} = model.get('{0}')\n        ".format(param)
+        for param in self.phase_params:
+            init += "self.{0} = model.get('{0}')\n\t".format(param)
 
         return init

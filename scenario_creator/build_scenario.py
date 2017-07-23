@@ -23,6 +23,7 @@ class ScenarioBuilder(object):
         self.opt_params = []
         self.imports = []
         self.phases = []
+        self.params = ""
 
     def _buildContext(self):
         """
@@ -36,9 +37,11 @@ class ScenarioBuilder(object):
             "scenario_description": self.main.description,
             "scenario_tid": self.main.tid,
             "scenario_type": self.main.type,
-            "supported_platforms": '{"ubuntu": ">=0.0", "debian": ">=0.0", "redhat": ">=0.0", "linuxmint": ">=0.0", "windows": ">=6.0", "osx": ">=0.0"}',
+            "supported_platforms": """{'ubuntu': '>=0.0', 'debian': '>=0.0',
+                                       'redhat': '>=0.0', 'linuxmint': '>=0.0',
+                                       'windows': '>=6.0', 'osx': '>=0.0'}""",
 
-            "required_params": self.string,
+            "required_params": "",
             "schema_properties": self.jsonGen.generateDescriptorSchema(),
             "form_parameters": self.jsonGen.generateDescriptorForm(),
 
@@ -52,6 +55,12 @@ class ScenarioBuilder(object):
 
         for phase in self.phases:
             self.context["phase_import_statements"] += "from ai_utils.phases.{} import {}\n".format(phase.name, phase.class_name)
+
+        # Have to format req_params for cookiecutter TODO: do this elegantally
+        params = ""
+        for param in self.req_params:
+            self.context["required_params"] += '"{}", '.format(param)
+        self.context["required_params"] = self.context["required_params"][:-2]
 
 
     def _getPhaseObject(self, phase_name):
@@ -83,7 +92,7 @@ class ScenarioBuilder(object):
         """
         Move necessary libraries and phases into scenario directory
         """
-        # TODO: figure out 'correct' way to find these directories
+        # TODO: figure out more 'correct' way to find these directories
         try:
             shutil.copytree(library_dir, os.path.join(builder_root, self.main.subject + '/bin'))
 
@@ -92,12 +101,11 @@ class ScenarioBuilder(object):
                 shutil.copy(library_dir, os.path.join(builder_root, self.main.subject + '/bin'))
 
 
-
     def Run(self):
         """
-        Main program function --> NEED TO PUT IN CHECKS FOR INPUT
+        Main program function
 
-        Also, move this out of the class definition perhaps?
+        TODO: Make checks for inputs, move this out of the class definition
         """
         scenario_name = raw_input("What do you want to name the scenario? ")
         scenario_type = input("Is this scenario an attack (1) or a validation (2)? ")
@@ -114,15 +122,10 @@ class ScenarioBuilder(object):
             self.opt_params += phase.opt_params
             self.imports = phase.imports
 
-        # Have to format req_params TODO: get rid of this pls
-        string = ""
-        for param in self.req_params:
-            string += '"{}", '.format(param)
-        self.string = string[:-2]
 
         self.main = Main(scenario_name, scenario_type, scenario_description, self.phases)
-
         self.jsonGen = JsonFiles(self.req_params, self.opt_params)
+
         self._buildContext()
 
         cookiecutter(template_dir, no_input=True, extra_context=self.context)
@@ -133,5 +136,3 @@ class ScenarioBuilder(object):
 
 
 ScenarioBuilder().Run()
-
-

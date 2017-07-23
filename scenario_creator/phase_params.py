@@ -22,7 +22,8 @@ class PhaseParams(object):
         self.imports = self._filterImports()
         self.req_params, self.opt_params = self._getParams()
         self.class_name = self._getClassname()
-
+        # self.file = open(phase_path)
+        # use this instead and move cursor to top each time?
 
 
     def _getImports(self):
@@ -73,6 +74,8 @@ class PhaseParams(object):
         imports = self._getImports()
 
         # Find a more elegant solution pls
+        # Channging python lib path to just std lib to check if package
+        # is outside either ai_utils or stdlib
         i = len(imports) - 1
         tmp_path = sys.path
         lib_path = os.path.dirname(traceback.__file__)
@@ -105,8 +108,7 @@ class PhaseParams(object):
         req_params = []
         opt_params = []
 
-        # Pretty rudimentary implementation... TODO: more elegant solution
-
+        # TODO: more elegant solution
         file = open(self.path)
         for line in file:
             line = line.lstrip()
@@ -118,6 +120,7 @@ class PhaseParams(object):
                     else:
                         opt_params.append(arg.lstrip().split("=")[0].rstrip(" "))
 
+        file.close()
         return req_params, opt_params
 
     def _getClassname(self):
@@ -126,15 +129,9 @@ class PhaseParams(object):
         """
 
         # TODO: more elegant solution
-
-
         file = open(self.path)
         for line in file:
             line = line.lstrip()
             if line[:5] == "class":
                 return re.search('class (.+?)\(', line).group(1)
-
-
-
-
-
+        file.close()

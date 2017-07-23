@@ -34,7 +34,7 @@ class JsonFiles(object):
         form: return list of json dumps of dictionaries
 
         >>> JsonFiles(['req1', 'req2'],['opt1']).generateDescriptorForm()
-        ['{"placeholder": "", "type": "text", "feedback": false, "key": "req1", "validationMessage": ""}', '{"placeholder": "", "type": "text", "feedback": false, "key": "req2", "validationMessage": ""}', '{"placeholder": "", "type": "text", "feedback": false, "key": "opt1", "validationMessage": ""}']
+        '{"placeholder": "", "type": "text", "feedback": false, "key": "req1", "validationMessage": ""}, {"placeholder": "", "type": "text", "feedback": false, "key": "req2", "validationMessage": ""}, {"placeholder": "", "type": "text", "feedback": false, "key": "opt1", "validationMessage": ""}'
         """
 
         form_parameters = []
