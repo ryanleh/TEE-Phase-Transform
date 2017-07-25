@@ -26,7 +26,7 @@ def make_parser():
     parser.add_argument('-n','--scenario_name', required=True, help='Name of scenario')
     parser.add_argument('-t', '--type', default=1,help='Specify whether scenario is'\
                             ' an attack or a validation')
-    parser.add_argument('-d', '--description', default='', help='Scenario description')
+    parser.add_argument('-d', '--description', default='Description', help='Scenario description')
 
 
     return parser
@@ -117,7 +117,7 @@ def descriptor(args):
                 "properties": {}
                 }
 
-    schema['required'] = [required_input.keys()]
+    schema['required'] = required_input.keys()
 
     for param, value in required_input.items():
         schema['properties'][param] = { "title": param,
@@ -180,6 +180,8 @@ def main():
 
     circadence_phases_dir = os.path.join(scenario_dir, 'circadence_phases')
     os.mkdir(circadence_phases_dir)
+
+    open(os.path.join(scenario_dir,"circadence_phases/__init__.py"),'w')
 
     # copy AbstractCircadencePhase to target dir
     shutil.copy('abstract_circadence_phase.py', scenario_dir)

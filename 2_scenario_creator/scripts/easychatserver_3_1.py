@@ -22,6 +22,7 @@ class EasyChat(AbstractCircadencePhase):
                     """
 
     required_input_parameters = {'RHOST': None, 'username': None}
+    optional_input_parameters = {}
     output_parameters = {'password': None}
 
     def __init__(self, info):

@@ -8,15 +8,7 @@
             "form": [
                 {
                     "type": "text", 
-                    "key": "EXPECTED_RHOSTS"
-                }, 
-                {
-                    "type": "text", 
-                    "key": "RHOSTS"
-                }, 
-                {
-                    "type": "text", 
-                    "key": "RPORT"
+                    "key": "username"
                 }, 
                 {
                     "type": "text", 
@@ -25,29 +17,15 @@
             ], 
             "schema": {
                 "required": [
-                    [
-                        "EXPECTED_RHOSTS", 
-                        "RHOSTS", 
-                        "RPORT", 
-                        "RHOST"
-                    ]
+                    "username", 
+                    "RHOST"
                 ], 
                 "type": "object", 
                 "properties": {
-                    "EXPECTED_RHOSTS": {
+                    "username": {
                         "default": null, 
                         "type": "string", 
-                        "title": "EXPECTED_RHOSTS"
-                    }, 
-                    "RHOSTS": {
-                        "default": null, 
-                        "type": "string", 
-                        "title": "RHOSTS"
-                    }, 
-                    "RPORT": {
-                        "default": null, 
-                        "type": "string", 
-                        "title": "RPORT"
+                        "title": "username"
                     }, 
                     "RHOST": {
                         "default": null, 
