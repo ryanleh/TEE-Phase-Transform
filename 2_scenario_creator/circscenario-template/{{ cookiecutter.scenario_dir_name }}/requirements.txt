@@ -1,0 +1,8 @@
+#for windows uncomment following
+#file:c:/users/username/path/to/ai_utils#egg=ai_utils
+
+#for linux&mac uncomment following
+#file:/home/username/path/to/ai_util#egg=ai_utils
+
+#for releasing uncomment following
+git+ssh://git@community-repo.attackiq.com/attackiq/ai_utils.git@master#egg=ai_utils
