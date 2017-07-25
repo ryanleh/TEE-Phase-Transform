@@ -3,7 +3,6 @@
   "scenario_dir_name": "",
 
   "scenario_name": "",
-  "scenario_file_name": "",
   "scenario_class_name": "",
   "scenario_description": "",
   "scenario_guid": "",
@@ -11,5 +10,5 @@
   "supported_platforms": "",
 
   "phase_import_statements": "",
-  "exploitrix_phases": ""
+  "phases": ""
 }

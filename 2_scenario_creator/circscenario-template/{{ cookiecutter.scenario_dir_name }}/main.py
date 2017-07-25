@@ -3,6 +3,7 @@ from ai_utils.scenarios.scenario_executor import ScenarioExecutorClass
 {{ cookiecutter.phase_import_statements }}
 import importlib
 import logging
+import sys
 
 class {{ cookiecutter.scenario_class_name }}(AbstractScenarioClass):
     TrackerId = "{{ cookiecutter.scenario_guid }}"
@@ -12,13 +13,13 @@ class {{ cookiecutter.scenario_class_name }}(AbstractScenarioClass):
     def __init__(self, model):
         AbstractScenarioClass.__init__(self)
         self._state = model
-        self.exploitrix_phases = """{{ cookiecutter.exploitrix_phases }}""".split()
+        self.phases = """{{ cookiecutter.phases }}""".split()
 
     def Run(self):
-        state = dict()
+        state = {}
         state.update(self._state)
 
-        for acp in self.exploitrix_phases:
+        for acp in self.phases:
             module_string = 'circadence_phases' + '.' + acp
             module = importlib.import_module(module_string)
 
