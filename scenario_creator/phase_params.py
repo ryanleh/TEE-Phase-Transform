@@ -74,7 +74,7 @@ class PhaseParams(object):
         imports = self._getImports()
 
         # Find a more elegant solution pls
-        # Channging python lib path to just std lib to check if package
+        # Changing python lib path to just std lib to check if package
         # is outside either ai_utils or stdlib
         i = len(imports) - 1
         tmp_path = sys.path

@@ -21,7 +21,13 @@ class Main(object):
 
     def _makeRun(self):
         """
-        Write code to run phases in Run() function
+        Make Run function
+
+        >>> from phase_params import PhaseParams
+        >>> tcp_phase = PhaseParams("tcp_connect", '/home/ryan/projects/scenario_creator/bin/ai_utils/phases/'\
+                    'tcp_connect.py')
+        >>> Main('test',1,'',[tcp_phase])._makeRun()
+        'tcp_connect = Tcp_connectPhaseClass(True, self.ip, self.port, self.message)\\n\\ttcp_connect.Execute()\\n\\t'
         """
         run = ""
 
@@ -36,7 +42,7 @@ class Main(object):
         """
         Write code to check if required params exist within model
 
-        Somehow use GlobalParams to typeface and check args
+        TODO: Somehow use GlobalParams to typeface and check args
         """
         return "return True"
 
@@ -44,6 +50,13 @@ class Main(object):
     def _makeInit(self):
         """
         Make init function
+
+        >>> from phase_params import PhaseParams
+        >>> tcp_phase = PhaseParams("tcp_connect", '/home/ryan/projects/scenario_creator/bin/ai_utils/phases/'\
+                    'tcp_connect.py')
+        >>> Main('test',1,'',[tcp_phase])._makeInit()
+        "self.ip = model.get('ip')\\n\\tself.port = model.get('port')\\n\\tself.message = model.get('message')\\n\\t"
+
         """
 
         init = ""

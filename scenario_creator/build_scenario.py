@@ -30,6 +30,7 @@ class ScenarioBuilder(object):
         Builds Cookiecutter context json object
         """
 
+        # TODO: Let supported_platforms be created dynamically
         self.context = {
             "scenario_dir_name": self.main.subject,
 
@@ -37,9 +38,9 @@ class ScenarioBuilder(object):
             "scenario_description": self.main.description,
             "scenario_tid": self.main.tid,
             "scenario_type": self.main.type,
-            "supported_platforms": """{'ubuntu': '>=0.0', 'debian': '>=0.0',
-                                       'redhat': '>=0.0', 'linuxmint': '>=0.0',
-                                       'windows': '>=6.0', 'osx': '>=0.0'}""",
+            "supported_platforms": '''{"ubuntu": ">=0.0", "debian": ">=0.0",
+                                       "redhat": ">=0.0", "linuxmint": ">=0.0",
+                                       "windows": ">=6.0", "osx": ">=0.0"}''',
 
             "required_params": "",
             "schema_properties": self.jsonGen.generateDescriptorSchema(),
@@ -56,7 +57,7 @@ class ScenarioBuilder(object):
         for phase in self.phases:
             self.context["phase_import_statements"] += "from ai_utils.phases.{} import {}\n".format(phase.name, phase.class_name)
 
-        # Have to format req_params for cookiecutter TODO: do this elegantally
+        # Have to format req_params for cookiecutter TODO: do this elegantly
         params = ""
         for param in self.req_params:
             self.context["required_params"] += '"{}", '.format(param)

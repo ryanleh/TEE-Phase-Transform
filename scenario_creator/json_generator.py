@@ -10,13 +10,10 @@ class JsonFiles(object):
 
     def generateDescriptorSchema(self):
         """
-        Generate descriptor.json
-
-        TODO: Fix this multiline crap
+        Generate descriptor.json schema
 
         >>> JsonFiles(['req1', 'req2'],['opt1']).generateDescriptorSchema()
         '{"opt1": {"type": "string", "title": "opt1"}, "req1": {"type": "string", "title": "req1"}, "req2": {"type": "string", "title": "req2"}}'
-
         """
 
         schema_properties = {}
@@ -25,13 +22,12 @@ class JsonFiles(object):
             schema_properties[param] = {"title": param, "type": "string"}
 
 
-        # TODO: add indent
         return json.dumps(schema_properties)
 
 
     def generateDescriptorForm(self):
         """
-        form: return list of json dumps of dictionaries
+        Generate descriptor.json form
 
         >>> JsonFiles(['req1', 'req2'],['opt1']).generateDescriptorForm()
         '{"placeholder": "", "type": "text", "feedback": false, "key": "req1", "validationMessage": ""}, {"placeholder": "", "type": "text", "feedback": false, "key": "req2", "validationMessage": ""}, {"placeholder": "", "type": "text", "feedback": false, "key": "opt1", "validationMessage": ""}'
@@ -48,7 +44,6 @@ class JsonFiles(object):
             string += '{}, '.format(param)
         form_parameters = string[:-2]
 
-        # TODO: add indent
         return form_parameters
 
 
@@ -67,5 +62,4 @@ class JsonFiles(object):
         for param in self.params:
             model_parameters[param] = ''
 
-        # TODO: add indent
         return json.dumps(model_parameters)
