@@ -8,38 +8,75 @@
             "form": [
                 {
                     "type": "text", 
-                    "key": "MESSAGE"
+                    "key": "search_end"
                 }, 
                 {
                     "type": "text", 
-                    "key": "RHOST"
+                    "key": "search_start"
                 }, 
                 {
                     "type": "text", 
-                    "key": "RPORT"
+                    "key": "timeout"
+                }, 
+                {
+                    "type": "text", 
+                    "key": "additional_nmap_args"
+                }, 
+                {
+                    "type": "text", 
+                    "key": "desired_port"
+                }, 
+                {
+                    "type": "text", 
+                    "key": "n_threads"
+                }, 
+                {
+                    "type": "text", 
+                    "key": "ip_list"
                 }
             ], 
             "schema": {
                 "required": [
-                    "RHOST", 
-                    "RPORT"
+                    "search_end", 
+                    "search_start", 
+                    "ip_list"
                 ], 
                 "type": "object", 
                 "properties": {
-                    "MESSAGE": {
-                        "default": "Hello World!", 
-                        "type": "string", 
-                        "title": "MESSAGE"
-                    }, 
-                    "RHOST": {
+                    "search_end": {
                         "default": "", 
                         "type": "string", 
-                        "title": "RHOST"
+                        "title": "search_end"
                     }, 
-                    "RPORT": {
+                    "n_threads": {
+                        "default": "50", 
+                        "type": "string", 
+                        "title": "n_threads"
+                    }, 
+                    "additional_nmap_args": {
                         "default": "", 
                         "type": "string", 
-                        "title": "RPORT"
+                        "title": "additional_nmap_args"
+                    }, 
+                    "desired_port": {
+                        "default": "", 
+                        "type": "string", 
+                        "title": "desired_port"
+                    }, 
+                    "search_start": {
+                        "default": "", 
+                        "type": "string", 
+                        "title": "search_start"
+                    }, 
+                    "timeout": {
+                        "default": "1", 
+                        "type": "string", 
+                        "title": "timeout"
+                    }, 
+                    "ip_list": {
+                        "default": "", 
+                        "type": "string", 
+                        "title": "ip_list"
                     }
                 }
             }, 

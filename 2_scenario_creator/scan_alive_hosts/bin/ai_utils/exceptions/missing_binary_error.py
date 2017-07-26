@@ -1,0 +1,2 @@
+class MissingBinaryError(Exception):
+  pass

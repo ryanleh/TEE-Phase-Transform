@@ -1,0 +1,2 @@
+class PlatformNotSupportedError(Exception):
+  pass

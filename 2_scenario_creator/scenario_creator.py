@@ -71,6 +71,7 @@ def parameters(args):
         phase_mod_classes = filter(lambda (name, obj):
                                    'ai_utils' not in str(obj) and name != "AbstractCircadencePhase",
                                    phase_mod_classes)
+
         if len(phase_mod_classes) != 1:
             raise AttributeError
 

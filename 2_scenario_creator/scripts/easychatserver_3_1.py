@@ -21,7 +21,7 @@ class EasyChat(AbstractCircadencePhase):
                     user located on an EasyChat server version 3.1
                     """
 
-    required_input_parameters = {'RHOST': None, 'username': None}
+    required_input_parameters = {'RHOSTS': None, 'username': None}
     optional_input_parameters = {}
     output_parameters = {'password': None}
 

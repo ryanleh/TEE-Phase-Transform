@@ -1,0 +1,81 @@
+{
+  "phases": [
+    {
+      "trackerId": "518", 
+      "description": "This phase tries to identify what machines are up from the list of IPs", 
+      "subject": "Get Alive Hosts"
+    }
+  ], 
+  "sourceUrl": "", 
+  "description": "idk", 
+  "trackerId": "123", 
+  "aiPhaseIds": "#518", 
+  "resources": [
+    {
+      "engine": "ai_python.exe", 
+      "scenario_type": 2, 
+      "form": [
+        {
+          "type": "text", 
+          "placeholder": "", 
+          "feedback": false, 
+          "key": "ip_list", 
+          "validationMessage": ""
+        }, 
+        {
+          "type": "text", 
+          "placeholder": "", 
+          "feedback": false, 
+          "key": "n_threads", 
+          "validationMessage": ""
+        }, 
+        {
+          "type": "text", 
+          "placeholder": "", 
+          "feedback": false, 
+          "key": "timeout", 
+          "validationMessage": ""
+        }, 
+        {
+          "type": "text", 
+          "placeholder": "", 
+          "feedback": false, 
+          "key": "use_arp", 
+          "validationMessage": ""
+        }
+      ], 
+      "entryscript": "main.py", 
+      "supported_platforms": {
+        "osx": ">=0.0", 
+        "redhat": ">=0.0", 
+        "windows": ">=6.0", 
+        "linuxmint": ">=0.0", 
+        "ubuntu": ">=0.0", 
+        "debian": ">=0.0"
+      }, 
+      "schema": {
+        "required": [], 
+        "type": "object", 
+        "properties": {
+          "use_arp": {
+            "type": "string", 
+            "title": "use_arp"
+          }, 
+          "ip_list": {
+            "type": "string", 
+            "title": "ip_list"
+          }, 
+          "timeout": {
+            "type": "string", 
+            "title": "timeout"
+          }, 
+          "n_threads": {
+            "type": "string", 
+            "title": "n_threads"
+          }
+        }
+      }
+    }
+  ], 
+  "subject": "test"
+}
