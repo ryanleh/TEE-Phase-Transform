@@ -1,0 +1,2 @@
+class PhaseError(Exception):
+  pass

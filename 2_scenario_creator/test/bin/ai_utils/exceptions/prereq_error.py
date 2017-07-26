@@ -1,0 +1,2 @@
+class PrereqError(Exception):
+  pass
