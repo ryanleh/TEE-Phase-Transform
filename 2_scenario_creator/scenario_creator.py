@@ -91,11 +91,25 @@ def parameters(args):
                                     if field not in phase_class.get_outputs()}
         opt_params.update(phase_class.get_opt_inputs())
 
+    for key in req_params:
+        if not req_params[key]:
+            req_params[key] = ""
+
+    for key in opt_params:
+        if not opt_params[key]:
+            opt_params[key] = ""
+
     return req_params, opt_params
 
 
 def descriptor(args):
     required_input,optional_input = parameters(args)
+
+
+
+    all_input = required_input.copy()
+    all_input.update(optional_input)
+
 
     desc = {}
     desc['resources'] = []
@@ -119,7 +133,7 @@ def descriptor(args):
 
     schema['required'] = required_input.keys()
 
-    for param, value in required_input.items():
+    for param, value in all_input.items():
         schema['properties'][param] = { "title": param,
                                         "type": "string",
                                         "default": value
@@ -166,13 +180,9 @@ def main():
     with open("circscenario-template/{{ cookiecutter.scenario_dir_name }}/descriptor.json", 'w') as j:
         json.dump(descriptor_dict, j, indent=4)
 
-    print('\n'.join(map(str, descriptor_dict.items())))
-
-
     with open("circscenario-template/{{ cookiecutter.scenario_dir_name }}/model.json", 'w') as j:
         json.dump(input_dict, j)
 
-    print('\n'.join(map(str, input_dict.items())))
 
     cookiecutter(os.path.join(root_directory,"./circscenario-template"), no_input=True, extra_context=cookiecutter_dict)
 

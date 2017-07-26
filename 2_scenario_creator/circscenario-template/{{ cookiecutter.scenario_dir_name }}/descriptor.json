@@ -8,29 +8,38 @@
             "form": [
                 {
                     "type": "text", 
-                    "key": "username"
+                    "key": "MESSAGE"
                 }, 
                 {
                     "type": "text", 
                     "key": "RHOST"
+                }, 
+                {
+                    "type": "text", 
+                    "key": "RPORT"
                 }
             ], 
             "schema": {
                 "required": [
-                    "username", 
-                    "RHOST"
+                    "RHOST", 
+                    "RPORT"
                 ], 
                 "type": "object", 
                 "properties": {
-                    "username": {
-                        "default": null, 
+                    "MESSAGE": {
+                        "default": "Hello World!", 
                         "type": "string", 
-                        "title": "username"
+                        "title": "MESSAGE"
                     }, 
                     "RHOST": {
-                        "default": null, 
+                        "default": "", 
                         "type": "string", 
                         "title": "RHOST"
+                    }, 
+                    "RPORT": {
+                        "default": "", 
+                        "type": "string", 
+                        "title": "RPORT"
                     }
                 }
             }, 

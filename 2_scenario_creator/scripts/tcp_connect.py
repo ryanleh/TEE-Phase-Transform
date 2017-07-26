@@ -9,16 +9,16 @@ class Tcp_connectPhaseClass(AbstractCircadencePhase):
   Description = "Test scenario that sends a message over TCP"
 
   required_input_parameters = {'RHOST': None, 'RPORT': None}
-  optional_input_parameters = {'Message': "Hello World!"}
+  optional_input_parameters = {'MESSAGE': "Hello World!"}
   output_parameters = {}
 
 
   def __init__(self, info):
-    AbstractCircadencePhase.__init__(self, info)
+    AbstractCircadencePhase.__init__(self, info=info)
 
-    assert RHOST in info
-    assert RPORT in info
-    assert MESSAGE in info
+    assert 'RHOST' in info
+    assert 'RPORT' in info
+    assert 'MESSAGE' in info
 
 
   def Setup(self):
@@ -63,9 +63,9 @@ class Tcp_connectPhaseClass(AbstractCircadencePhase):
       local_ip = s.getsockname()[0]
       lip_split = local_ip.split('.')
 
-      #See if given IP is on same subnet... if not, check if it's routable
-      if not all(l == p for l,p in zip(lip_split[:3],pieces[:3])):
-        socket.gethostbyaddr(rhost)
+      #See if given IP is on same subnet... if not, check if it's routable - this doesn't work?
+      # if not all(l == p for l,p in zip(lip_split[:3],pieces[:3])):
+      #   socket.gethostbyaddr(rhost)
 
 
     except socket.herror:
@@ -75,7 +75,7 @@ class Tcp_connectPhaseClass(AbstractCircadencePhase):
     self._rhost = rhost
     return True
 
-  def SetupPort(self, port):
+  def SetupPort(self, rport):
     """
     Checks that given string is an int and within port range
 
