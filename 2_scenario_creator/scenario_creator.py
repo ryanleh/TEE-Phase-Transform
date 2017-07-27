@@ -96,8 +96,7 @@ def parameters(args):
         if not opt_params[key]:
             opt_params[key] = ""
 
-    print(req_params)
-    print(opt_params)
+
 
     return req_params, opt_params
 

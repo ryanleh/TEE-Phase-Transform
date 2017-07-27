@@ -1,0 +1,108 @@
+{
+    "resources": [
+        {
+            "engine": "ai_python.exe", 
+            "scenario_type": 2, 
+            "supported_platforms": "", 
+            "scenario_description": "Exploit vulnerable Easychat server", 
+            "form": [
+                {
+                    "type": "text", 
+                    "key": "username"
+                }, 
+                {
+                    "type": "text", 
+                    "key": "search_end"
+                }, 
+                {
+                    "type": "text", 
+                    "key": "ip_list"
+                }, 
+                {
+                    "type": "text", 
+                    "key": "additional_nmap_args"
+                }, 
+                {
+                    "type": "text", 
+                    "key": "desired_port"
+                }, 
+                {
+                    "type": "text", 
+                    "key": "use_arp"
+                }, 
+                {
+                    "type": "text", 
+                    "key": "search_start"
+                }, 
+                {
+                    "type": "text", 
+                    "key": "timeout"
+                }, 
+                {
+                    "type": "text", 
+                    "key": "n_threads"
+                }
+            ], 
+            "schema": {
+                "required": [
+                    "username", 
+                    "search_end", 
+                    "desired_port", 
+                    "search_start", 
+                    "ip_list"
+                ], 
+                "type": "object", 
+                "properties": {
+                    "username": {
+                        "default": "", 
+                        "type": "string", 
+                        "title": "username"
+                    }, 
+                    "search_end": {
+                        "default": "", 
+                        "type": "string", 
+                        "title": "search_end"
+                    }, 
+                    "ip_list": {
+                        "default": "", 
+                        "type": "string", 
+                        "title": "ip_list"
+                    }, 
+                    "additional_nmap_args": {
+                        "default": "", 
+                        "type": "string", 
+                        "title": "additional_nmap_args"
+                    }, 
+                    "desired_port": {
+                        "default": "", 
+                        "type": "string", 
+                        "title": "desired_port"
+                    }, 
+                    "use_arp": {
+                        "default": "False", 
+                        "type": "string", 
+                        "title": "use_arp"
+                    }, 
+                    "search_start": {
+                        "default": "", 
+                        "type": "string", 
+                        "title": "search_start"
+                    }, 
+                    "timeout": {
+                        "default": "1", 
+                        "type": "string", 
+                        "title": "timeout"
+                    }, 
+                    "n_threads": {
+                        "default": "50", 
+                        "type": "string", 
+                        "title": "n_threads"
+                    }
+                }
+            }, 
+            "tracker_id": "5d8e92e8-1347-4752-be17-877afb025e99", 
+            "entryscript": "main.py", 
+            "subject": "easy_chat"
+        }
+    ]
+}
