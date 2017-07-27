@@ -19,7 +19,7 @@ class AbstractCircadencePhase(AbstractPhaseClass):
                     """
 
     required_input_parameters = {}
-    optional_input_parameter = {}
+    optional_input_parameters = {}
     output_parameters = {}
 
     def __init__(self, isPhaseCritical=True, info=None):
@@ -71,6 +71,7 @@ class AbstractCircadencePhase(AbstractPhaseClass):
             the C{PhaseResult} dict.
         """
         return cls.output_parameters
+
 
     def get_progress(self):
         """

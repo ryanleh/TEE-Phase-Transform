@@ -9,30 +9,35 @@ class GetAliveHostsPhaseClass(AbstractCircadencePhase):
     Subject = "Get Alive Hosts"
     Description = "This phase tries to identify what machines are up from the list of IPs"
 
-    required_input_parameters = {"ip_list": ""}
-    optional_input_parameters = {"n_threads": "50", "timeout": "1"}
-    output_parameters = {"RHOSTS": []}
+    required_input_parameters = {'ip_list': ''}
+    optional_input_parameters = {'use_arp': 'False', 'n_threads': '50', 'timeout': '1'}
+    output_parameters = {}
 
-    def __init__(self, info):
-        AbstractCircadencePhase.__init__(self, info=info)
+    def __init__(self,info):
+        AbstractCircadencePhase.__init__(self,info=info)
+	ip_list = self.PhaseResult['ip_list']
+	use_arp = self.PhaseResult['use_arp']
+	n_threads = self.PhaseResult['n_threads']
+	timeout = self.PhaseResult['timeout']
+
         logging.info('Executing Get Alive Hosts Phase constructor...')
-        self.ip_list = self.setup_ip_list(info['ip_list'])
-        self.n_threads = self.setup_number_of_threads(info['n_threads'])
-        self.timeout = self.setup_time_out(info['timeout'])
-        self.use_arp = self.setup_use_arp(True)
+        self.ip_list = self.setup_ip_list(ip_list)
+        self.n_threads = self.setup_number_of_threads(n_threads)
+        self.timeout = self.setup_time_out(timeout)
+        self.use_arp = self.setup_use_arp(use_arp)
         self.alive_hosts = []
 
     def Setup(self):
         logging.debug('Executing Setup')
         if not self.ip_list:
-            self.PhaseReporter.Error('IP List parameter is required')
-            return False
+          self.PhaseReporter.Error('IP List parameter is required')
+          return False
         if self.n_threads <= 0:
-            self.PhaseReporter.Error('Number of Threads parameter is required, it can not be set to >=0')
-            return False
+          self.PhaseReporter.Error('Number of Threads parameter is required, it can not be set to >=0')
+          return False
         if not self.timeout:
-            self.PhaseReporter.Error('Timeout parameter is required')
-            return False
+          self.PhaseReporter.Error('Timeout parameter is required')
+          return False
         return True
 
     def Run(self):
@@ -46,18 +51,22 @@ class GetAliveHostsPhaseClass(AbstractCircadencePhase):
         logging.info('Scanning for alive hosts...')
         self.alive_hosts = NetworkScanUtilsClass.GetAliveHosts(self.ip_list, self.n_threads, self.timeout,
                                                                useARP=self.use_arp)
-        self.alive_hosts.append('10.160.0.23')
-
         self.PhaseReporter.Info('Network scanned using full connect scan')
         return len(self.alive_hosts) > 0
 
     def log_success(self, phase_successful):
         logging.debug('Executing log_success. phase_successful: {}'.format(phase_successful))
         if phase_successful:
-            self.PhaseResult['RHOSTS'] = self.alive_hosts
-            self.PhaseReporter.Info('Successfully found {} alive hosts'.format(len(self.alive_hosts)))
+          self.PhaseResult['findings'] = {'alive_hosts': self.alive_hosts}
+          self.PhaseReporter.Info('Successfully found {} alive hosts'.format(len(self.alive_hosts)))
+          self.PhaseReporter.Report('{} alive hosts were found after scanning the network: {}'.format(len(self.alive_hosts),
+                                                                                                      ', '.join(
+                                                                                                        self.alive_hosts)))
+          self.PhaseReporter.Mitigation(
+            'Traffic from "{}" to the following hosts should be monitored or prevented: {}'.format(
+              HostInfo.GetLocalIpAddress(), ', '.join(self.alive_hosts)))
         else:
-            self.PhaseReporter.Info('Alive hosts could not be found')
+          self.PhaseReporter.Info('Alive hosts could not be found')
 
     @staticmethod
     def setup_ip_list(ip_list):
@@ -69,14 +78,14 @@ class GetAliveHostsPhaseClass(AbstractCircadencePhase):
     @staticmethod
     def setup_number_of_threads(n_threads):
         logging.debug('Executing setup_number_of_threads. n_threads: {}'.format(n_threads))
-        param = int(n_threads)
+        param = n_threads
         logging.info('Number of threads: {0}'.format(param))
         return param
 
     @staticmethod
     def setup_time_out(timeout):
         logging.debug('Executing setup_time_out. timeout: {}'.format(timeout))
-        param = int(timeout)
+        param = timeout
         logging.info('Timeout: {0}'.format(param))
         return param
 
@@ -87,10 +96,9 @@ class GetAliveHostsPhaseClass(AbstractCircadencePhase):
         logging.info('UseARP: {0}'.format(param))
         return param
 
-
 def create(info):
     """
-        Create a new instance of the stage object.
-        @return: instance of the stage object
+        Create a new instance of the phase
     """
+
     return GetAliveHostsPhaseClass(info)

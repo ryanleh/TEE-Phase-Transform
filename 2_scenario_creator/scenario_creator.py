@@ -10,6 +10,7 @@ import json
 import tempfile
 import inspect
 import errno
+import traceback
 
 
 # TODO: handle inputs that aren't in stdlib
@@ -41,16 +42,6 @@ def read_ac(acpath):
         return [phase_name.strip() for phase_name in aclines]
 
 
-def read_description(phase_list):
-    """
-        @param phase_list: a path corresponding to an AC listing
-        @return: the documentation's given description
-    """
-    with open(os.path.join('../doc/scripts',
-                           os.path.split(phase_list)[1]),
-              'r') as d:
-        return d.read()
-
 
 def parameters(args):
     """
@@ -77,6 +68,8 @@ def parameters(args):
 
         phase_class = phase_mod_classes[0][1]
 
+
+
         # Idea:
         # required_inputs -= current_outputs
         # required_inputs += current_inputs
@@ -92,6 +85,9 @@ def parameters(args):
                                     if field not in phase_class.get_outputs()}
         opt_params.update(phase_class.get_opt_inputs())
 
+
+
+
     for key in req_params:
         if not req_params[key]:
             req_params[key] = ""
@@ -99,6 +95,9 @@ def parameters(args):
     for key in opt_params:
         if not opt_params[key]:
             opt_params[key] = ""
+
+    print(req_params)
+    print(opt_params)
 
     return req_params, opt_params
 
@@ -158,19 +157,49 @@ def cookie(args):
 
     import_statements = ''
     for phase in cookie_dict['phases'].split():
-        import_statements = import_statements + 'import circadence_phases.{0}\n'.format(phase)
+        import_statements += 'import circadence_phases.{0}\n'.format(phase)
 
     cookie_dict['phase_import_statements'] = import_statements
 
     return cookie_dict
 
 
+"""def filter_imports(args):
+    
+    phase_list = args.phase_list
+
+    imports = []
+
+    for phase in phase_list:
+        mod = importlib.import_module(phase)
+        mod_imports = inspect.getmembers(mod, inspect.ismodule)
+        imports += mod_imports
+
+    print(imports)
+    # Find a more elegant solution
+    # Changing python lib path to just std lib to check if package
+    # is outside either ai_utils or stdlib
+    # Weird loop because of list indexing
+    i = len(imports) - 1
+    tmp_path = sys.path
+    lib_path = os.path.dirname(traceback.__file__)
+    sys.path = [lib_path]
+    while (i >= 0):
+        try:
+            importlib.import_module(imports[i][0], package=None)
+            del imports[i]
+        except ImportError:
+            pass
+        i -= 1
+    sys.path = tmp_path
+    print(imports)
+    return imports"""
+
+
+
 def main():
     root_directory = os.path.dirname(os.path.realpath(__file__))
     args = make_parser().parse_args()
-
-    print(args)
-
 
     req_dict, opt_dict = parameters(args)
     input_dict = req_dict.copy()
@@ -200,11 +229,14 @@ def main():
     for mod in cookiecutter_dict['phases'].split():
         shutil.copy(os.path.join('./scripts', mod + '.py'),circadence_phases_dir)
 
+
     try:
         shutil.copytree(os.path.join(root_directory,"bin"), os.path.join(scenario_dir, 'bin'))
     except OSError as exc:
         if exc.errno == errno.ENOTDIR:
             shutil.copy(os.path.join(root_directory,"bin"), os.path.join(scenario_dir, 'bin'))
+
+    shutil.copy(os.path.join(root_directory,'nmap.py'),os.path.join(scenario_dir,'bin'))
 
 
 if __name__ == '__main__':

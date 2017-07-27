@@ -8,11 +8,11 @@
             "form": [
                 {
                     "type": "text", 
-                    "key": "search_end"
+                    "key": "use_arp"
                 }, 
                 {
                     "type": "text", 
-                    "key": "search_start"
+                    "key": "ip_list"
                 }, 
                 {
                     "type": "text", 
@@ -20,63 +20,34 @@
                 }, 
                 {
                     "type": "text", 
-                    "key": "additional_nmap_args"
-                }, 
-                {
-                    "type": "text", 
-                    "key": "desired_port"
-                }, 
-                {
-                    "type": "text", 
                     "key": "n_threads"
-                }, 
-                {
-                    "type": "text", 
-                    "key": "ip_list"
                 }
             ], 
             "schema": {
                 "required": [
-                    "search_end", 
-                    "search_start", 
                     "ip_list"
                 ], 
                 "type": "object", 
                 "properties": {
-                    "search_end": {
+                    "use_arp": {
+                        "default": "False", 
+                        "type": "string", 
+                        "title": "use_arp"
+                    }, 
+                    "ip_list": {
                         "default": "", 
                         "type": "string", 
-                        "title": "search_end"
-                    }, 
-                    "n_threads": {
-                        "default": "50", 
-                        "type": "string", 
-                        "title": "n_threads"
-                    }, 
-                    "additional_nmap_args": {
-                        "default": "", 
-                        "type": "string", 
-                        "title": "additional_nmap_args"
-                    }, 
-                    "desired_port": {
-                        "default": "", 
-                        "type": "string", 
-                        "title": "desired_port"
-                    }, 
-                    "search_start": {
-                        "default": "", 
-                        "type": "string", 
-                        "title": "search_start"
+                        "title": "ip_list"
                     }, 
                     "timeout": {
                         "default": "1", 
                         "type": "string", 
                         "title": "timeout"
                     }, 
-                    "ip_list": {
-                        "default": "", 
+                    "n_threads": {
+                        "default": "50", 
                         "type": "string", 
-                        "title": "ip_list"
+                        "title": "n_threads"
                     }
                 }
             }, 

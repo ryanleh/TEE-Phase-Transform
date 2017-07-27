@@ -37,14 +37,16 @@ class EasyChat(AbstractCircadencePhase):
         """
         AbstractCircadencePhase.__init__(self, info=info)
 
-        assert 'RHOST' in info
+        assert 'RHOSTS' in info
         assert 'username' in info
 
     def Setup(self):
         """
             Initialize Phase arguments, must return True
         """
-        self._rhost = self.PhaseResult['RHOST']
+
+        # Grab just the first IP (not yet able to handle multiple hosts)
+        self._rhost = self.PhaseResult['RHOSTS'][0]
         self._username = self.PhaseResult['username']
         return True
 
@@ -74,7 +76,7 @@ class EasyChat(AbstractCircadencePhase):
         self._progress = 100
         self.PhaseResult['password'] = password
 
-        self.PhaseReporter.Info("user= {0}; password= {1}".format(self._username, password))
+        self.PhaseReporter.Info("Found user= {0}; password= {1}".format(self._username, password))
         return True
 
 

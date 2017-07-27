@@ -33,7 +33,6 @@ class {{ cookiecutter.scenario_class_name }}(AbstractScenarioClass):
 
             state = phase.get_result()
 
-
             added = {k: v for k, v in state.items()
                      if k not in old_state}
             if added:
