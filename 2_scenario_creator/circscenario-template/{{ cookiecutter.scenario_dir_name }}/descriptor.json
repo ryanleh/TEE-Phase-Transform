@@ -8,19 +8,7 @@
             "form": [
                 {
                     "type": "text", 
-                    "key": "username"
-                }, 
-                {
-                    "type": "text", 
                     "key": "search_end"
-                }, 
-                {
-                    "type": "text", 
-                    "key": "ip_list"
-                }, 
-                {
-                    "type": "text", 
-                    "key": "additional_nmap_args"
                 }, 
                 {
                     "type": "text", 
@@ -28,75 +16,50 @@
                 }, 
                 {
                     "type": "text", 
-                    "key": "use_arp"
+                    "key": "RHOSTS"
+                }, 
+                {
+                    "type": "text", 
+                    "key": "additional_nmap_args"
                 }, 
                 {
                     "type": "text", 
                     "key": "search_start"
-                }, 
-                {
-                    "type": "text", 
-                    "key": "timeout"
-                }, 
-                {
-                    "type": "text", 
-                    "key": "n_threads"
                 }
             ], 
             "schema": {
                 "required": [
-                    "username", 
                     "search_end", 
                     "desired_port", 
-                    "search_start", 
-                    "ip_list"
+                    "RHOSTS", 
+                    "search_start"
                 ], 
                 "type": "object", 
                 "properties": {
-                    "username": {
-                        "default": "", 
-                        "type": "string", 
-                        "title": "username"
-                    }, 
                     "search_end": {
-                        "default": "", 
+                        "default": null, 
                         "type": "string", 
                         "title": "search_end"
                     }, 
-                    "ip_list": {
-                        "default": "", 
+                    "desired_port": {
+                        "default": null, 
                         "type": "string", 
-                        "title": "ip_list"
+                        "title": "desired_port"
+                    }, 
+                    "RHOSTS": {
+                        "default": null, 
+                        "type": "string", 
+                        "title": "RHOSTS"
                     }, 
                     "additional_nmap_args": {
                         "default": "", 
                         "type": "string", 
                         "title": "additional_nmap_args"
                     }, 
-                    "desired_port": {
-                        "default": "", 
-                        "type": "string", 
-                        "title": "desired_port"
-                    }, 
-                    "use_arp": {
-                        "default": "False", 
-                        "type": "string", 
-                        "title": "use_arp"
-                    }, 
                     "search_start": {
-                        "default": "", 
+                        "default": null, 
                         "type": "string", 
                         "title": "search_start"
-                    }, 
-                    "timeout": {
-                        "default": "1", 
-                        "type": "string", 
-                        "title": "timeout"
-                    }, 
-                    "n_threads": {
-                        "default": "50", 
-                        "type": "string", 
-                        "title": "n_threads"
                     }
                 }
             }, 

@@ -13,8 +13,7 @@ import errno
 import traceback
 
 
-# TODO: handle inputs that aren't in stdlib
-
+external_imports = ['nmap','HashCracker']
 
 def make_parser():
     """
@@ -144,7 +143,10 @@ def cookie(args):
     return cookie_dict
 
 
-"""def filter_imports(args):
+def filter_imports(args):
+    """
+        Check if any external imports are needed
+    """
 
     phase_list = args.phase_list
 
@@ -153,27 +155,13 @@ def cookie(args):
     for phase in phase_list:
         mod = importlib.import_module(phase)
         mod_imports = inspect.getmembers(mod, inspect.ismodule)
-        imports += mod_imports
+        for imp in mod_imports:
+            for external_import in external_imports:
+                if imp[0] == external_import:
+                    print(imp[0])
+                    imports.append(imp[0])
 
-    print(imports)
-    # Find a more elegant solution
-    # Changing python lib path to just std lib to check if package
-    # is outside either ai_utils or stdlib
-    # Weird loop because of list indexing
-    i = len(imports) - 1
-    tmp_path = sys.path
-    lib_path = os.path.dirname(traceback.__file__)
-    sys.path = [lib_path]
-    while (i >= 0):
-        try:
-            importlib.import_module(imports[i][0], package=None)
-            del imports[i]
-        except ImportError:
-            pass
-        i -= 1
-    sys.path = tmp_path
-    print(imports)
-    return imports"""
+    return imports
 
 def main():
     args = make_parser().parse_args()
@@ -215,7 +203,12 @@ def main():
         if exc.errno == errno.ENOTDIR:
             shutil.copy(os.path.join(root_directory,"bin"), os.path.join(scenario_dir, 'bin'))
 
-    shutil.copy(os.path.join(root_directory,'nmap.py'),os.path.join(scenario_dir,'bin'))
+    # Move any needed external imports
+    ext_imports = filter_imports(args)
+    for ext_import in ext_imports:
+        module = os.path.join(root_directory, "bin/",ext_import + ".py")
+        shutil.copy(module, os.path.join(scenario_dir, "bin"))
+
 
 
 if __name__ == '__main__':
