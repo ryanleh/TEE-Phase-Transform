@@ -18,8 +18,7 @@ import traceback
 
 def make_parser():
     """
-        @return: an C{ArgumentParser} object that can parse this script's
-        commandline arguments.
+        Builds ArgumentParser Object
     """
     parser = argparse.ArgumentParser()
     parser.add_argument('-p','--phase_list', required=True, nargs = '+',
@@ -32,22 +31,9 @@ def make_parser():
 
     return parser
 
-
-def read_ac(acpath):
-    """
-        @param acpath: path to an AC listing
-        @return: a list of modules in this AC
-    """
-    with open(acpath, 'r') as aclines:
-        return [phase_name.strip() for phase_name in aclines]
-
-
-
 def parameters(args):
     """
-        @param args: argument magic object parsed by C{argparse} 
-        @return: a field-description dict of parameters that you need to run 
-            the phase from start to end.
+        Return dictionaries of required and optional parameters
     """
 
     req_params = {}
@@ -68,11 +54,7 @@ def parameters(args):
 
         phase_class = phase_mod_classes[0][1]
 
-
-
-        # Idea:
-        # required_inputs -= current_outputs
-        # required_inputs += current_inputs
+        # Keep all inputs which aren't outputs of previous phases
         req_params = {field: desc
                                     for field, desc
                                     in req_params.items()
@@ -85,30 +67,26 @@ def parameters(args):
                                     if field not in phase_class.get_outputs()}
         opt_params.update(phase_class.get_opt_inputs())
 
-
-
-
-    for key in req_params:
+    # TODO: Fix parameter type
+    """for key in req_params:
         if not req_params[key]:
             req_params[key] = ""
 
     for key in opt_params:
         if not opt_params[key]:
-            opt_params[key] = ""
-
-
+            opt_params[key] = """""
 
     return req_params, opt_params
 
 
 def descriptor(args):
+    """
+        Builds descriptor.json
+    """
     required_input,optional_input = parameters(args)
-
-
 
     all_input = required_input.copy()
     all_input.update(optional_input)
-
 
     desc = {}
     desc['resources'] = []
@@ -145,6 +123,9 @@ def descriptor(args):
 
 
 def cookie(args):
+    """
+        Builds cookiecutter.json
+    """
     cookie_dict = dict()
     cookie_dict['scenario_dir_name'] = args.scenario_name
     cookie_dict['scenario_name'] = args.scenario_name
@@ -164,7 +145,7 @@ def cookie(args):
 
 
 """def filter_imports(args):
-    
+
     phase_list = args.phase_list
 
     imports = []
@@ -194,12 +175,14 @@ def cookie(args):
     print(imports)
     return imports"""
 
-
-
 def main():
-    root_directory = os.path.dirname(os.path.realpath(__file__))
     args = make_parser().parse_args()
 
+    # Set path variables
+    root_directory = os.path.dirname(os.path.realpath(__file__))
+    scenario_dir = os.path.join(root_directory, args.scenario_name)
+
+    # Grab all inputs and build cookiecutter, descriptor, and model objects
     req_dict, opt_dict = parameters(args)
     input_dict = req_dict.copy()
     input_dict.update(opt_dict)
@@ -212,23 +195,20 @@ def main():
     with open("circscenario-template/{{ cookiecutter.scenario_dir_name }}/model.json", 'w') as j:
         json.dump(input_dict, j)
 
-
     cookiecutter(os.path.join(root_directory,"./circscenario-template"), no_input=True, extra_context=cookiecutter_dict)
 
-    scenario_dir = os.path.join(root_directory, args.scenario_name)
-
+    # Cookiecutter acts weird with folders sometimes so we're moving folders afterwards
+    # Create circadence_phases directory and move appropiate phases into it
     circadence_phases_dir = os.path.join(scenario_dir, 'circadence_phases')
     os.mkdir(circadence_phases_dir)
-
     open(os.path.join(scenario_dir,"circadence_phases/__init__.py"),'w')
-
-    # copy AbstractCircadencePhase to target dir
-    shutil.copy('abstract_circadence_phase.py', scenario_dir)
-
     for mod in cookiecutter_dict['phases'].split():
         shutil.copy(os.path.join('./scripts', mod + '.py'),circadence_phases_dir)
 
+    # copy AbstractCircadencePhase to scenario dir
+    shutil.copy('abstract_circadence_phase.py', scenario_dir)
 
+    # Copy ai_utils + other needed dependecies into bin directory
     try:
         shutil.copytree(os.path.join(root_directory,"bin"), os.path.join(scenario_dir, 'bin'))
     except OSError as exc:
