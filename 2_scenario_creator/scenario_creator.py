@@ -12,8 +12,8 @@ import inspect
 import errno
 import traceback
 
-
-external_imports = ['nmap','HashCracker']
+# Add to this once more phases have been converted
+external_imports = ['nmap']
 
 def make_parser():
     """
