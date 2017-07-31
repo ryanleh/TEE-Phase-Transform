@@ -8,58 +8,38 @@
             "form": [
                 {
                     "type": "text", 
-                    "key": "search_end"
+                    "key": "ip"
                 }, 
                 {
                     "type": "text", 
-                    "key": "desired_port"
+                    "key": "message"
                 }, 
                 {
                     "type": "text", 
-                    "key": "RHOSTS"
-                }, 
-                {
-                    "type": "text", 
-                    "key": "additional_nmap_args"
-                }, 
-                {
-                    "type": "text", 
-                    "key": "search_start"
+                    "key": "port"
                 }
             ], 
             "schema": {
                 "required": [
-                    "search_end", 
-                    "desired_port", 
-                    "RHOSTS", 
-                    "search_start"
+                    "ip", 
+                    "port"
                 ], 
                 "type": "object", 
                 "properties": {
-                    "search_end": {
+                    "ip": {
                         "default": null, 
                         "type": "string", 
-                        "title": "search_end"
+                        "title": "ip"
                     }, 
-                    "desired_port": {
+                    "message": {
+                        "default": "Hello World!", 
+                        "type": "string", 
+                        "title": "message"
+                    }, 
+                    "port": {
                         "default": null, 
                         "type": "string", 
-                        "title": "desired_port"
-                    }, 
-                    "RHOSTS": {
-                        "default": null, 
-                        "type": "string", 
-                        "title": "RHOSTS"
-                    }, 
-                    "additional_nmap_args": {
-                        "default": "", 
-                        "type": "string", 
-                        "title": "additional_nmap_args"
-                    }, 
-                    "search_start": {
-                        "default": null, 
-                        "type": "string", 
-                        "title": "search_start"
+                        "title": "port"
                     }
                 }
             }, 

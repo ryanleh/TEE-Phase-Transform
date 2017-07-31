@@ -9,9 +9,9 @@ class GetAliveHostsPhaseClass(AbstractCircadencePhase):
     Subject = "Get Alive Hosts"
     Description = "This phase tries to identify what machines are up from the list of IPs"
 
-    required_input_parameters = {'ip_list': ''}
+    required_input_parameters = {'ip_list': None}
     optional_input_parameters = {'use_arp': 'False', 'n_threads': '50', 'timeout': '1'}
-    output_parameters = {'RHOSTS':''}
+    output_parameters = {}
 
     def __init__(self,info):
         AbstractCircadencePhase.__init__(self,info=info)
@@ -44,7 +44,6 @@ class GetAliveHostsPhaseClass(AbstractCircadencePhase):
         logging.debug('Executing Run')
         phase_successful = self.execute_scan()
         self.log_success(phase_successful)
-        self.PhaseResult['RHOSTS'] = self.alive_hosts
         return phase_successful
 
     def execute_scan(self):

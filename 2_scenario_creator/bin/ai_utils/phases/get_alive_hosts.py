@@ -21,14 +21,14 @@ class GetAliveHostsPhaseClass(AbstractPhaseClass):
     def Setup(self):
         logging.debug('Executing Setup')
         if not self.ip_list:
-          self.PhaseReporter.Error('IP List parameter is required')
-          return False
+            self.PhaseReporter.Error('IP List parameter is required')
+            return False
         if self.n_threads <= 0:
-          self.PhaseReporter.Error('Number of Threads parameter is required, it can not be set to >=0')
-          return False
+            self.PhaseReporter.Error('Number of Threads parameter is required, it can not be set to >=0')
+            return False
         if not self.timeout:
-          self.PhaseReporter.Error('Timeout parameter is required')
-          return False
+            self.PhaseReporter.Error('Timeout parameter is required')
+            return False
         return True
 
     def Run(self):
@@ -54,16 +54,16 @@ class GetAliveHostsPhaseClass(AbstractPhaseClass):
     def log_success(self, phase_successful):
         logging.debug('Executing log_success. phase_successful: {}'.format(phase_successful))
         if phase_successful:
-          self.PhaseResult['findings'] = {'alive_hosts': self.alive_hosts}
-          self.PhaseReporter.Info('Successfully found {} alive hosts'.format(len(self.alive_hosts)))
-          self.PhaseReporter.Report('{} alive hosts were found after scanning the network: {}'.format(len(self.alive_hosts),
-                                                                                                      ', '.join(
-                                                                                                        self.alive_hosts)))
-          self.PhaseReporter.Mitigation(
-            'Traffic from "{}" to the following hosts should be monitored or prevented: {}'.format(
-              HostInfo.GetLocalIpAddress(), ', '.join(self.alive_hosts)))
+            self.PhaseResult['findings'] = {'alive_hosts': self.alive_hosts}
+            self.PhaseReporter.Info('Successfully found {} alive hosts'.format(len(self.alive_hosts)))
+            self.PhaseReporter.Report('{} alive hosts were found after scanning the network: {}'.format(len(self.alive_hosts),
+                                                                                                        ', '.join(
+                                                                                                          self.alive_hosts)))
+            self.PhaseReporter.Mitigation(
+              'Traffic from "{}" to the following hosts should be monitored or prevented: {}'.format(
+                HostInfo.GetLocalIpAddress(), ', '.join(self.alive_hosts)))
         else:
-          self.PhaseReporter.Info('Alive hosts could not be found')
+            self.PhaseReporter.Info('Alive hosts could not be found')
 
     @staticmethod
     def setup_ip_list(ip_list):

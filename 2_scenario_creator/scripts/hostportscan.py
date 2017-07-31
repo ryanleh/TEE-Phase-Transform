@@ -15,9 +15,9 @@ class HostPortScan(AbstractCircadencePhase):
                     ports along with services on those ports
                     """
     
-    required_input_parameters = {'RHOSTS': None, 'search_start': None, 'search_end': None, 'desired_port': None}
+    required_input_parameters = {'RHOSTS': [], 'search_start': int(), 'search_end': int(), 'desired_port': int()}
     optional_input_parameters = {'additional_nmap_args':""}
-    output_parameters = {'port_list': None, 'RHOSTS': None}
+    output_parameters = {'port_list': [], 'RHOSTS': []}
 
     def __init__(self, info):
         """

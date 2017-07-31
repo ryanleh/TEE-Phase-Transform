@@ -15,7 +15,7 @@
       <file leaf-file-name="abstract_circadence_phase.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/abstract_circadence_phase.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="322">
+            <state relative-caret-position="0">
               <caret line="20" column="16" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
               <folding />
             </state>
@@ -25,42 +25,54 @@
       <file leaf-file-name="scenario_creator.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scenario_creator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="146">
-              <caret line="98" column="0" lean-forward="false" selection-start-line="98" selection-start-column="0" selection-end-line="98" selection-end-column="0" />
+            <state relative-caret-position="990">
+              <caret line="84" column="0" lean-forward="false" selection-start-line="84" selection-start-column="0" selection-end-line="84" selection-end-column="0" />
               <folding>
                 <element signature="e#0#42#0" expanded="true" />
-                <element signature="e#4918#5755#1" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="hostportscan.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/scripts/hostportscan.py">
+      <file leaf-file-name="circ_phase_generator.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/circ_phase_generator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1196">
-              <caret line="60" column="16" lean-forward="true" selection-start-line="60" selection-start-column="16" selection-end-line="60" selection-end-column="16" />
-              <folding />
+            <state relative-caret-position="657">
+              <caret line="49" column="60" lean-forward="false" selection-start-line="49" selection-start-column="60" selection-end-line="49" selection-end-column="60" />
+              <folding>
+                <element signature="e#0#10#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/easy_chat/main.py">
+      <file leaf-file-name="host_discovery.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bin/ai_utils/phases/host_discovery.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="414">
-              <caret line="25" column="25" lean-forward="false" selection-start-line="25" selection-start-column="25" selection-end-line="25" selection-end-column="25" />
-              <folding />
+            <state relative-caret-position="22">
+              <caret line="16" column="81" lean-forward="false" selection-start-line="16" selection-start-column="81" selection-end-line="16" selection-end-column="81" />
+              <folding>
+                <element signature="e#0#61#0" expanded="true" />
+                <marker date="1501527441949" expanded="true" signature="219:7415" ph="..." />
+                <marker date="1501527441949" expanded="true" signature="7332:7415" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="get_alive_hosts.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/easy_chat/circadence_phases/get_alive_hosts.py">
+        <entry file="file://$PROJECT_DIR$/bin/ai_utils/phases/get_alive_hosts.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="989">
-              <caret line="46" column="24" lean-forward="true" selection-start-line="46" selection-start-column="24" selection-end-line="46" selection-end-column="24" />
-              <folding />
+            <state relative-caret-position="990">
+              <caret line="48" column="72" lean-forward="false" selection-start-line="48" selection-start-column="72" selection-end-line="48" selection-end-column="72" />
+              <folding>
+                <marker date="1501527441769" expanded="true" signature="904:985" ph="..." />
+                <marker date="1501527441769" expanded="true" signature="974:985" ph="..." />
+                <marker date="1501527441769" expanded="true" signature="3148:3215" ph="..." />
+                <marker date="1501527441769" expanded="true" signature="3266:3471" ph="..." />
+                <marker date="1501527441769" expanded="true" signature="3534:3739" ph="..." />
+                <marker date="1501527441769" expanded="true" signature="3791:3971" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -82,6 +94,7 @@
       <find>alive_hosts_callback</find>
       <find>params</find>
       <find>is_phase</find>
+      <find>get_inputs</find>
     </findStrings>
     <replaceStrings>
       <replace>phase_list</replace>
@@ -114,19 +127,21 @@
         <option value="$PROJECT_DIR$/bin/ai_utils/phases/abstract_phase.py" />
         <option value="$PROJECT_DIR$/test/circadence_phases/tcp_connect.py" />
         <option value="$PROJECT_DIR$/scripts/test.py" />
-        <option value="$PROJECT_DIR$/scripts/tcp_connect.py" />
         <option value="$PROJECT_DIR$/scripts/easychatserver_3_1.py" />
         <option value="$PROJECT_DIR$/bin/ai_utils/utils/offensive/network_scan.py" />
         <option value="$PROJECT_DIR$/get_alive_hosts.py" />
         <option value="$PROJECT_DIR$/abstract_circadence_phase.py" />
         <option value="$PROJECT_DIR$/test/circadence_phases/get_alive_hosts.py" />
         <option value="$PROJECT_DIR$/scripts/get_alive_hosts.py" />
-        <option value="$PROJECT_DIR$/circ_phase_generator.py" />
-        <option value="$PROJECT_DIR$/scenario_creator.py" />
         <option value="$PROJECT_DIR$/bin/ai_utils/phases/get_alive_hosts.py" />
         <option value="$PROJECT_DIR$/easy_chat/main.py" />
         <option value="$PROJECT_DIR$/easy_chat/circadence_phases/get_alive_hosts.py" />
         <option value="$PROJECT_DIR$/scripts/hostportscan.py" />
+        <option value="$PROJECT_DIR$/scenario_creator.py" />
+        <option value="$PROJECT_DIR$/circ_phase_generator.py" />
+        <option value="$PROJECT_DIR$/bin/ai_utils/phases/alternate_stream.py" />
+        <option value="$PROJECT_DIR$/scripts/tcp_connect.py" />
+        <option value="$PROJECT_DIR$/bin/ai_utils/phases/tcp_connect.py" />
       </list>
     </option>
   </component>
@@ -151,6 +166,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -187,7 +203,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="easy_chat" />
+              <option name="myItemId" value="bin" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -201,23 +217,22 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="easy_chat" />
+              <option name="myItemId" value="bin" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="circadence_phases" />
+              <option name="myItemId" value="ai_utils" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
       <pane id="Scratches" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.Python" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Font" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -320,9 +335,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="64" y="-11" width="3773" height="1999" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24980111" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12224874" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -350,22 +364,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/circscenario-template/{{ cookiecutter.scenario_dir_name }}/__main__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-468">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/circscenario-template/{{ cookiecutter.scenario_dir_name }}/descriptor.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/bin/ai_utils/reporter/phase_reporter.py" />
-    <entry file="file://$PROJECT_DIR$/test/circadence_phases/host_discovery.py" />
     <entry file="file://$PROJECT_DIR$/test/descriptor.json" />
     <entry file="file://$PROJECT_DIR$/test/main.py" />
     <entry file="file://$PROJECT_DIR$/test/model.json" />
@@ -418,25 +416,13 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/get_alive/circadence_phases/get_alive_hosts.py" />
-    <entry file="file://$PROJECT_DIR$/nmap.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4577">
-          <caret line="206" column="11" lean-forward="false" selection-start-line="206" selection-start-column="11" selection-end-line="206" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/nmap.py" />
     <entry file="file://$PROJECT_DIR$/scan_alive_hosts/model.json" />
     <entry file="file://$PROJECT_DIR$/scan_alive_hosts/circadence_phases/get_alive_hosts.py" />
     <entry file="file://$PROJECT_DIR$/scan_alive_hosts/circadence_phases/hostportscan.py" />
     <entry file="file://$PROJECT_DIR$/easy_chat/model.json" />
     <entry file="file://$PROJECT_DIR$/easy_chat/circadence_phases/easychatserver_3_1.py" />
-    <entry file="file://$PROJECT_DIR$/scripts/host_discovery.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="46">
-          <caret line="2" column="29" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/host_discovery.py" />
     <entry file="file://$PROJECT_DIR$/bin/ai_utils/phases/abstract_phase.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1104">
@@ -482,7 +468,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/scripts/test.py" />
-    <entry file="file://$PROJECT_DIR$/scripts/tcp_connect.py" />
     <entry file="file://$PROJECT_DIR$/circscenario-template/{{ cookiecutter.scenario_dir_name }}/main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="23">
@@ -505,40 +490,11 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/get_alive_hosts.py" />
-    <entry file="file://$PROJECT_DIR$/test/circadence_phases/get_alive_hosts.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-299">
-          <caret line="20" column="41" lean-forward="true" selection-start-line="20" selection-start-column="41" selection-end-line="20" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/test/circadence_phases/get_alive_hosts.py" />
     <entry file="file://$PROJECT_DIR$/scripts/get_alive_hosts.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="414">
           <caret line="21" column="0" lean-forward="false" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#61#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/ai_utils/phases/get_alive_hosts.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="905">
-          <caret line="48" column="72" lean-forward="false" selection-start-line="48" selection-start-column="72" selection-end-line="48" selection-end-column="72" />
-          <folding>
-            <element signature="e#0#61#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/circ_phase_generator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="529">
-          <caret line="41" column="20" lean-forward="false" selection-start-line="41" selection-start-column="20" selection-end-line="41" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#10#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -546,13 +502,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="24" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/abstract_circadence_phase.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="322">
+        <state relative-caret-position="0">
           <caret line="20" column="16" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
           <folding />
         </state>
@@ -560,36 +515,113 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/scenario_creator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="146">
-          <caret line="98" column="0" lean-forward="false" selection-start-line="98" selection-start-column="0" selection-end-line="98" selection-end-column="0" />
+        <state relative-caret-position="990">
+          <caret line="84" column="0" lean-forward="false" selection-start-line="84" selection-start-column="0" selection-end-line="84" selection-end-column="0" />
           <folding>
             <element signature="e#0#42#0" expanded="true" />
-            <element signature="e#4918#5755#1" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/hostportscan.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+          <folding>
+            <element signature="e#105#116#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/easy_chat/circadence_phases/get_alive_hosts.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="924">
+          <caret line="45" column="24" lean-forward="false" selection-start-line="45" selection-start-column="24" selection-end-line="45" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/ai_utils/phases/get_alive_hosts.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="990">
+          <caret line="48" column="72" lean-forward="false" selection-start-line="48" selection-start-column="72" selection-end-line="48" selection-end-column="72" />
+          <folding>
+            <marker date="1501527441769" expanded="true" signature="904:985" ph="..." />
+            <marker date="1501527441769" expanded="true" signature="974:985" ph="..." />
+            <marker date="1501527441769" expanded="true" signature="3148:3215" ph="..." />
+            <marker date="1501527441769" expanded="true" signature="3266:3471" ph="..." />
+            <marker date="1501527441769" expanded="true" signature="3534:3739" ph="..." />
+            <marker date="1501527441769" expanded="true" signature="3791:3971" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/easy_chat/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
+        <state relative-caret-position="396">
           <caret line="25" column="25" lean-forward="false" selection-start-line="25" selection-start-column="25" selection-end-line="25" selection-end-column="25" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/easy_chat/circadence_phases/get_alive_hosts.py">
+    <entry file="file://$PROJECT_DIR$/bin/ai_utils/phases/host_discovery.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="989">
-          <caret line="46" column="24" lean-forward="true" selection-start-line="46" selection-start-column="24" selection-end-line="46" selection-end-column="24" />
+        <state relative-caret-position="22">
+          <caret line="16" column="81" lean-forward="false" selection-start-line="16" selection-start-column="81" selection-end-line="16" selection-end-column="81" />
+          <folding>
+            <element signature="e#0#61#0" expanded="true" />
+            <marker date="1501527441949" expanded="true" signature="219:7415" ph="..." />
+            <marker date="1501527441949" expanded="true" signature="7332:7415" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/ai_utils/phases/search_filesystem.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="12" column="2" lean-forward="false" selection-start-line="12" selection-start-column="2" selection-end-line="12" selection-end-column="2" />
+          <folding>
+            <element signature="e#0#9#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/ai_utils/phases/alternate_stream.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-792">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#61#0" expanded="false" />
+            <marker date="1501527441873" expanded="true" signature="265:268" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/ai_utils/phases/tcp_connect.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="638">
+          <caret line="29" column="0" lean-forward="true" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#61#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/tcp_connect.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="924">
+          <caret line="52" column="0" lean-forward="true" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/hostportscan.py">
+    <entry file="file://$PROJECT_DIR$/circ_phase_generator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1196">
-          <caret line="60" column="16" lean-forward="true" selection-start-line="60" selection-start-column="16" selection-end-line="60" selection-end-column="16" />
-          <folding />
+        <state relative-caret-position="657">
+          <caret line="49" column="60" lean-forward="false" selection-start-line="49" selection-start-column="60" selection-end-line="49" selection-end-column="60" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

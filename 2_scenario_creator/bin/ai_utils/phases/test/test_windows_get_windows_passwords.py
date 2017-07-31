@@ -8,10 +8,10 @@ import unittest
 
 class TestGetWindowsPasswordsPhaseClass(unittest.TestCase):
 
-  def setUp(self):
-    AiLoggerClass().Enable()
-
-  def test_phase(self):
-    phase = GetWindowsPasswordsPhaseClass(True, 'mimikatz')
-    success = phase.Execute()
-    self.assertTrue(success)
+    def setUp(self):
+        AiLoggerClass().Enable()
+    
+    def test_phase(self):
+        phase = GetWindowsPasswordsPhaseClass(True, 'mimikatz')
+        success = phase.Execute()
+        self.assertTrue(success)

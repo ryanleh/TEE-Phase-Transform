@@ -1,2 +1,2 @@
 class PlatformNotSupportedError(Exception):
-  pass
+    pass

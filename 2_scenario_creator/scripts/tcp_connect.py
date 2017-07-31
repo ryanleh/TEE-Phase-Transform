@@ -1,15 +1,23 @@
-from ai_utils.phases.abstract_phase import AbstractPhaseClass
+from abstract_circadence_phase import AbstractCircadencePhase
 import socket
 
 
 
-class Tcp_connectPhaseClass(AbstractPhaseClass):
+class Tcp_connectPhaseClass(AbstractCircadencePhase):
     TrackerId = "PHS-e79ea5e8-5aac-11e7-b3e3-000c29c2ba76"
     Subject = "tcp_connect"
     Description = "Test scenario that sends a message over TCP"
 
-    def __init__(self, is_phase_critical, ip, port, message="Hello World!"):
-        AbstractPhaseClass.__init__(self, is_phase_critical)
+    required_input_parameters = {'ip': None, 'port': None}
+    optional_input_parameters = {'message': 'Hello World!'}
+    output_parameters = {}
+
+    def __init__(self,info):
+        AbstractCircadencePhase.__init__(self,info=info)
+	ip = self.PhaseResult['ip']
+	port = self.PhaseResult['port']
+	message = self.PhaseResult['message']
+
         self.ip = ip
         self.port = port
         self.message = message
@@ -42,7 +50,6 @@ class Tcp_connectPhaseClass(AbstractPhaseClass):
         if len(pieces) != 4 or not all(0 <= int(p) < 256 for p in pieces):
             self.PhaseReporter.Info('Invalid IP {}'.format(ip))
             return False
-
 
         return True
 
@@ -85,3 +92,10 @@ class Tcp_connectPhaseClass(AbstractPhaseClass):
 
         self.PhaseReporter.Info('Successfully sent message: {}'.format(self.message))
         return True
+
+def create(info):
+    """
+        Create a new instance of the phase
+    """
+
+    return Tcp_connectPhaseClass(info)

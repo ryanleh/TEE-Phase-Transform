@@ -33,6 +33,8 @@ def make_parser():
 def parameters(args):
     """
         Return dictionaries of required and optional parameters
+
+        >>>parameters(make_parser())
     """
 
     req_params = {}
@@ -65,15 +67,6 @@ def parameters(args):
                                     in opt_params.items()
                                     if field not in phase_class.get_outputs()}
         opt_params.update(phase_class.get_opt_inputs())
-
-    # TODO: Fix parameter type
-    """for key in req_params:
-        if not req_params[key]:
-            req_params[key] = ""
-
-    for key in opt_params:
-        if not opt_params[key]:
-            opt_params[key] = """""
 
     return req_params, opt_params
 
@@ -158,7 +151,6 @@ def filter_imports(args):
         for imp in mod_imports:
             for external_import in external_imports:
                 if imp[0] == external_import:
-                    print(imp[0])
                     imports.append(imp[0])
 
     return imports
