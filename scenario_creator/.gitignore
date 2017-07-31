@@ -1,7 +1,0 @@
-/dist
-/.idea
-/output
-*.pyc
-*~
-/build
-venv

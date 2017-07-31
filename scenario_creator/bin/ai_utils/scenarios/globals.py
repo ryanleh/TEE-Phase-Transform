@@ -19,16 +19,16 @@ from ai_utils.ai_logging.utils import LoggingUtilsClass as LoggingUtils
 GenericReporter = ReporterClass("", LoggerTypeClass.Generic)
 
 def HasAttr(objectName, attribute):
-  if not hasattr(objectName, attribute):
-    logging.error("{0} must have attribute '{1}'".format(objectName.__name__, attribute))
-    return False
-  if StringUtils.IsEmptyOrNull(getattr(objectName, attribute)):
-    logging.error("{0} must have non-empty attribute '{1}'".format(objectName.__name__, attribute))
-    return False
-  return True
+    if not hasattr(objectName, attribute):
+        logging.error("{0} must have attribute '{1}'".format(objectName.__name__, attribute))
+        return False
+    if StringUtils.IsEmptyOrNull(getattr(objectName, attribute)):
+        logging.error("{0} must have non-empty attribute '{1}'".format(objectName.__name__, attribute))
+        return False
+    return True
 
 class Globals:
-  CriticalPhasesCount = 0
-  CriticalPhaseSuccessCount = 0
-  ScenarioType = None
-  PhaseErrorCount = 0
+    CriticalPhasesCount = 0
+    CriticalPhaseSuccessCount = 0
+    ScenarioType = None
+    PhaseErrorCount = 0

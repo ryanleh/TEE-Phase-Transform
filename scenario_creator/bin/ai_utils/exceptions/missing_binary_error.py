@@ -1,2 +1,2 @@
 class MissingBinaryError(Exception):
-  pass
+    pass
