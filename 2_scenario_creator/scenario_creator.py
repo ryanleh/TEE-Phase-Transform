@@ -13,6 +13,8 @@ import errno
 import traceback
 import glob
 
+root_directory = os.path.dirname(os.path.realpath(__file__))
+
 # Add to this once more phases have been converted
 external_imports = ['nmap']
 
@@ -31,11 +33,10 @@ def make_parser():
 
     return parser
 
-def parameters(args):
+def get_parameters(args):
     """
         Return dictionaries of required and optional parameters
 
-        >>>parameters(make_parser())
     """
 
     req_params = {}
@@ -46,15 +47,11 @@ def parameters(args):
         phase_mod = importlib.import_module(phase)
         phase_mod_classes = inspect.getmembers(phase_mod, inspect.isclass)
 
-        # TODO: this line is sketchy
-        phase_mod_classes = filter(lambda (name, obj):
-                                   'ai_utils' not in str(obj) and name != "AbstractCircadencePhase",
-                                   phase_mod_classes)
+        phase_class = [cls for cls in phase_mod_classes if cls[1].__module__ == phase][0][1]
 
-        if len(phase_mod_classes) != 1:
+        if len(phase_mod_classes) == 0:
+            print("Error in finding class object")
             raise AttributeError
-
-        phase_class = phase_mod_classes[0][1]
 
         # Keep all inputs which aren't outputs of previous phases
         req_params = {field: desc
@@ -72,11 +69,11 @@ def parameters(args):
     return req_params, opt_params
 
 
-def descriptor(args):
+def build_descriptor(args):
     """
         Builds descriptor.json
     """
-    required_input,optional_input = parameters(args)
+    required_input,optional_input = get_parameters(args)
 
     all_input = required_input.copy()
     all_input.update(optional_input)
@@ -114,7 +111,7 @@ def descriptor(args):
     return desc
 
 
-def cookie(args):
+def build_cookiecutter(args):
     """
         Builds cookiecutter.json
     """
@@ -160,15 +157,14 @@ def main():
     args = make_parser().parse_args()
 
     # Set path variables
-    root_directory = os.path.dirname(os.path.realpath(__file__))
     scenario_dir = os.path.join(root_directory, args.scenario_name)
 
     # Grab all inputs and build cookiecutter, descriptor, and model objects
-    req_dict, opt_dict = parameters(args)
+    req_dict, opt_dict = get_parameters(args)
     input_dict = req_dict.copy()
     input_dict.update(opt_dict)
-    cookiecutter_dict = cookie(args)
-    descriptor_dict = descriptor(args)
+    cookiecutter_dict = build_cookiecutter(args)
+    descriptor_dict = build_descriptor(args)
 
     with open("circscenario-template/{{ cookiecutter.scenario_dir_name }}/descriptor.json", 'w') as j:
         json.dump(descriptor_dict, j, indent=4)
@@ -208,7 +204,6 @@ def main():
 if __name__ == '__main__':
 
     # Append phase and ai_utils directory to python path
-    root_directory = os.path.dirname(os.path.realpath(__file__))
     phase_directory = os.path.join(root_directory,'scripts/')
     sys.path.append(phase_directory)
     sys.path.append('./bin')

@@ -61,9 +61,7 @@ def get_class_object(phase):
     phase_mod_classes = inspect.getmembers(phase_mod, inspect.isclass)
 
     #This line assumes that any non-ai_utils phase imports are entire modules and not specific classes
-    phase_mod_classes = filter(lambda (name, obj):
-                               'ai_utils' not in str(obj) and name != "AbstractCircadencePhase",
-                               phase_mod_classes)
+    phase_mod_classes = [cls for cls in phase_mod_classes if cls[1].__module__ == phase]
 
     if len(phase_mod_classes) == 0:
         print("Error in finding class object")
