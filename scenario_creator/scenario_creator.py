@@ -182,9 +182,6 @@ def main():
     for mod in cookiecutter_dict['phases'].split():
         shutil.copy(os.path.join('./scripts', mod + '.py'),circadence_phases_dir)
 
-    # copy AbstractCircadencePhase to scenario dir
-    shutil.copy('abstract_circadence_phase.py', scenario_dir)
-
     # Copy ai_utils + other needed dependecies into bin directory
     try:
         shutil.copytree(os.path.join(root_directory,"bin"), os.path.join(scenario_dir, 'bin'))
