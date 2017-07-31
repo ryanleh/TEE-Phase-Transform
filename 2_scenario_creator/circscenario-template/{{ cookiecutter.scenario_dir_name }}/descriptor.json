@@ -2,7 +2,7 @@
     "resources": [
         {
             "engine": "ai_python.exe", 
-            "scenario_type": 2, 
+            "scenario_type": 1, 
             "supported_platforms": "{{ cookiecutter.supported_platforms }}", 
             "scenario_description": "{{ cookiecutter.scenario_description }}", 
             "form": [
