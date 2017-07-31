@@ -51,6 +51,7 @@ class Tcp_connectPhaseClass(AbstractCircadencePhase):
             self.PhaseReporter.Info('Invalid IP {}'.format(ip))
             return False
 
+
         return True
 
     def SetupPort(self, port):

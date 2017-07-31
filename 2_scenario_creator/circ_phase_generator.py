@@ -28,40 +28,45 @@ def get_inputs(phase):
     req_inputs = {}
     opt_inputs = {}
 
+    # Get arguments from __init__ method object
     phase_class = get_class_object(phase)[0][1]
-
     init_method = None
-
     for method in inspect.getmembers(phase_class, inspect.ismethod):
         if method[0] == '__init__':
             init_method = method[1]
+    args = inspect.getargspec(init_method)
 
-
-    try:
-        args = inspect.getargspec(init_method)
-
+    # inspect.getargspec returns a tuple of four lists - args, varargs, keywords, and defaults
+    # If defaults exists set opt_inputs to corresponding arguments with stated defaults and req_inputs to remaining
+    # args excluding self and is_phase_critical arguments
+    # Otherwise, just set req_inputs to all arguments besides self, and is_phase_critical
+    if args[3]:
         for req_arg in args[0][2:len(args[0])-len(args[3])]:
             req_inputs[req_arg] = None
 
         for opt_arg in zip(reversed(args[0]),reversed(args[3])):
             opt_inputs[opt_arg[0]] = str(opt_arg[1])
-
-    except TypeError as e:
-        print('__init__ function not found in class object')
+    else:
+        for req_arg in args[0][2:]:
+            req_inputs[req_arg] = None
 
     return req_inputs, opt_inputs
 
 
 def get_class_object(phase):
-    # Get Classname
-    phase_mod = importlib.import_module(phase[:-3])
+    """
+        Returns a class object belonging to the main class of the given phase module
+    """
+    phase_mod = importlib.import_module(phase)
     phase_mod_classes = inspect.getmembers(phase_mod, inspect.isclass)
 
+    #This line assumes that any non-ai_utils phase imports are entire modules and not specific classes
     phase_mod_classes = filter(lambda (name, obj):
                                'ai_utils' not in str(obj) and name != "AbstractCircadencePhase",
                                phase_mod_classes)
 
-    if len(phase_mod_classes) != 1:
+    if len(phase_mod_classes) == 0:
+        print("Error in finding class object")
         raise AttributeError
 
     return phase_mod_classes
@@ -72,7 +77,7 @@ def copy_phase(phase, cir_phase_path, init):
         Convert phase to circadence phase
     """
 
-    phase_path = os.path.join(phase_directory, phase)
+    phase_path = os.path.join(phase_directory, phase + ".py")
 
     original = open(phase_path, 'r')
     copy = open(cir_phase_path, 'w')
@@ -125,15 +130,15 @@ def generate_init(req_inputs, opt_inputs):
 def main():
 
     args = make_parser().parse_args()
-    cir_phase_path = os.path.join(script_directory, args.phase)
+    cir_phase_path = os.path.join(script_directory, args.phase + ".py")
 
+    # Gather necessary requirements
     req_inputs, opt_inputs = get_inputs(args.phase)
     init = generate_init(req_inputs,opt_inputs)
+
+    #Generate phase
     copy_phase(args.phase, cir_phase_path, init)
-
-
     insert_req(args.phase, cir_phase_path, req_inputs, opt_inputs)
-
 
 
 if __name__ == '__main__':
