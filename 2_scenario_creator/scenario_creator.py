@@ -66,15 +66,6 @@ def parameters(args):
                                     if field not in phase_class.get_outputs()}
         opt_params.update(phase_class.get_opt_inputs())
 
-    # TODO: Fix parameter type
-    """for key in req_params:
-        if not req_params[key]:
-            req_params[key] = ""
-
-    for key in opt_params:
-        if not opt_params[key]:
-            opt_params[key] = """""
-
     return req_params, opt_params
 
 
@@ -92,8 +83,7 @@ def descriptor(args):
 
     resources = {   "engine": "ai_python.exe",
                     "entryscript": "main.py",
-                    # 1 for attack, 2 for verification
-                    "scenario_type": 2,
+                    "scenario_type": 1,
                     "scenario_description": "{{ cookiecutter.scenario_description }}",
                     "tracker_id": "{{ cookiecutter.scenario_guid }}",
                     "subject": "{{ cookiecutter.scenario_name }}",
@@ -125,14 +115,14 @@ def cookie(args):
     """
         Builds cookiecutter.json
     """
-    cookie_dict = dict()
-    cookie_dict['scenario_dir_name'] = args.scenario_name
-    cookie_dict['scenario_name'] = args.scenario_name
-    cookie_dict['scenario_class_name'] = args.scenario_name + "ScenarioClass"
-    cookie_dict['scenario_description'] = args.description
-    cookie_dict['scenario_guid'] = str(uuid.uuid4())
-    cookie_dict['supported_platforms'] = ''
-    cookie_dict['phases'] = '\n'.join(args.phase_list)
+    cookie_dict = { "scenario_dir_name": args.scenario_name
+                    "scenario_name": args.scenario_name
+                    "scenario_class_name": args.scenario_name + "ScenarioClass"
+                    "scenario_description": args.description
+                    "scenario_guid": str(uuid.uuid4)
+                    "supported_platforms": ''
+                    "phases": '\n'.join(args.phase_list)
+                    }
 
     import_statements = ''
     for phase in cookie_dict['phases'].split():
@@ -162,6 +152,7 @@ def filter_imports(args):
                     imports.append(imp[0])
 
     return imports
+
 
 def main():
     args = make_parser().parse_args()
