@@ -72,51 +72,45 @@ def get_class_object(phase):
     return phase_mod_classes
 
 
-def copy_phase(phase, cir_phase_path, init):
+def copy_phase(phase, cir_phase_path, init, req_inputs, opt_inputs):
     """
-        Convert phase to circadence phase
+        Convert phase to circadence phase.  Does regex subs on original phase and copies to new circadence directory.
     """
-
     phase_path = os.path.join(phase_directory, phase + ".py")
 
-    original = open(phase_path, 'r')
     copy = open(cir_phase_path, 'w')
 
-    # TODO: come up with better solution
-    # regex subs on each line and write line to file
-    for line in original:
-        line = re.sub(r"(from )ai_utils.phases.abstract_phase( import )AbstractPhaseClass", r"\1abstract_circadence_phase\2AbstractCircadencePhase", line)
-        line = re.sub(r"(\s*class.*)AbstractPhaseClass", r"\1AbstractCircadencePhase", line)
-        line = re.sub(r"(\s*def __init__\(self,).*", r"\1info):", line)
-        line = re.sub(r"(\s*Abstract)(Phase)Class(.__init__\(self,).*", r"\1Circadence\2\3info=info)\n{}".format(init), line)
-        copy.write(line)
+    original = ""
+    for line in open(phase_path,'r'):
+        original += line
 
+    original = re.sub(r"(from )ai_utils.phases.abstract_phase( import )AbstractPhaseClass",
+                        r"\1abstract_circadence_phase\2AbstractCircadencePhase", original)
+    original = re.sub(r"(\s*class.*)AbstractPhaseClass", r"\1AbstractCircadencePhase", original)
+    original = re.sub(r"(\s*def __init__\(self,).*", r"\1info):", original)
+    original = re.sub(r"(\s*Abstract)(Phase)Class(.__init__\(self,).*", r"\1Circadence\2\3info=info)\n{}".format(init),
+                        original)
+    original = re.sub(r"(\s*Description.*\n)",
+                      r"\1\n    required_input_parameters = {}" \
+                      "\n    optional_input_parameters = {}" \
+                      "\n    output_parameters = {}\n".format(req_inputs, opt_inputs, "{}"), original)
 
-def insert_req(phase, cir_phase_path, req_inputs, opt_inputs):
-    """
-        Put Create function and necessary input paramaters into phase
-    """
-
-    for line in fileinput.input(cir_phase_path, inplace=True):
-        if re.match(r"^\s*Description.*\n", line):
-            print(re.sub(r"(^\s*Description.*\n)",
-                       r"\1\n    required_input_parameters = {}"\
-                        "\n    optional_input_parameters = {}"\
-                        "\n    output_parameters = {}".format(req_inputs,opt_inputs,"{}"), line))
-        else:
-            sys.stdout.write(line)
+    copy.write(original)
+    copy.close()
 
     phase_class = get_class_object(phase)[0][0]
 
-    # Append Create
-    with open(cir_phase_path,"a") as file:
+    with open(cir_phase_path,'a') as file:
         file.write('\ndef create(info):\n    """\n        '\
             'Create a new instance of the phase\n    """\n'\
             '\n    return {}(info)\n'.format(phase_class))
 
 
-
 def generate_init(req_inputs, opt_inputs):
+    """
+        Generates local initializations of arguments from PhaseResult.  This is a bit redundant code-wise but much
+        easier to implement then replacing each already-existing local initialization.
+    """
     init = ""
 
     for req in req_inputs.keys():
@@ -137,13 +131,12 @@ def main():
     init = generate_init(req_inputs,opt_inputs)
 
     #Generate phase
-    copy_phase(args.phase, cir_phase_path, init)
-    insert_req(args.phase, cir_phase_path, req_inputs, opt_inputs)
+    copy_phase(args.phase, cir_phase_path, init, req_inputs, opt_inputs)
 
 
 if __name__ == '__main__':
 
-    # Append phase and ai_utils directory to python path
+    # Append phase directory to python path
     sys.path.append(os.path.join(root_directory,'./bin/ai_utils/phases'))
 
     main()
