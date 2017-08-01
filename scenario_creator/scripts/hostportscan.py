@@ -9,7 +9,7 @@ from abstract_circadence_phase import AbstractCircadencePhase
 
 class HostPortScan(AbstractCircadencePhase):
     TrackerId = "464"
-    Subject = "Test"
+    Subject = "Nmap Port Scan"
     Description =   """
                     This phase executes an nmap scan and returns all open
                     ports along with services on those ports
