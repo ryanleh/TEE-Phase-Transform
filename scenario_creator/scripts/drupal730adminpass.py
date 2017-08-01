@@ -16,6 +16,7 @@ class Drupal730AdminPass(AbstractCircadencePhase):
                     """
     
     required_input_parameters = {'RHOST': None, 'RPORT': 80, 'path': None}
+    optional_input_parameters = {}
     output_parameters = {}
 
     def __init__(self, info):

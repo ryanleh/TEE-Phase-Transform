@@ -1,7 +1,9 @@
 from abstract_circadence_phase import AbstractCircadencePhase
 from ai_utils.utils.offensive.network_scan import NetworkScanUtilsClass
 from ai_utils.scenarios.globals import NetworkUtils, HostInfo
+from ai_utils.utils.offensive.nmap_utils.nmap import NmapUtilsClass
 import logging
+import nmap
 
 
 class GetAliveHostsPhaseClass(AbstractCircadencePhase):
@@ -15,10 +17,10 @@ class GetAliveHostsPhaseClass(AbstractCircadencePhase):
 
     def __init__(self,info):
         AbstractCircadencePhase.__init__(self,info=info)
-	ip_list = self.PhaseResult['ip_list']
-	use_arp = self.PhaseResult['use_arp']
-	n_threads = self.PhaseResult['n_threads']
-	timeout = self.PhaseResult['timeout']
+        ip_list = self.PhaseResult['ip_list']
+        use_arp = self.PhaseResult['use_arp']
+        n_threads = self.PhaseResult['n_threads']
+        timeout = self.PhaseResult['timeout']
 
         logging.info('Executing Get Alive Hosts Phase constructor...')
         self.ip_list = self.setup_ip_list(ip_list)
@@ -49,9 +51,10 @@ class GetAliveHostsPhaseClass(AbstractCircadencePhase):
     def execute_scan(self):
         logging.debug('Executing execute_scan')
         logging.info('Scanning for alive hosts...')
-        self.alive_hosts = NetworkScanUtilsClass.GetAliveHosts(self.ip_list, self.n_threads, self.timeout,
-                                                               useARP=self.use_arp)
-        self.alive_hosts.append('10.160.0.23')
+
+        alive_hosts_found = NmapUtilsClass.GetAliveHosts(self.ip_list)
+
+        print(alive_hosts_found)
 
         for item in self.alive_hosts:
             if isinstance(item, tuple):

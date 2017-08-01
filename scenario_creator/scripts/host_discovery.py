@@ -1,7 +1,6 @@
 from abstract_circadence_phase import AbstractCircadencePhase
-from ai_utils.scenarios.globals import NetworkUtils
 from ai_utils.utils.offensive.nmap_utils.nmap import NmapUtilsClass
-
+from ai_utils.scenarios.globals import NetworkUtils
 import logging
 import time
 import re
@@ -12,51 +11,34 @@ class HostDiscoveryPhaseClass(AbstractCircadencePhase):
     Subject = "Host Discovery"
     Description = "This phase will scan a network segment in order to identify what hosts are up"
 
-    required_input_parameters = {'RHOSTS': None, 'EXPECTED_RHOSTS': None}
-    optional_input_parameters = {'TIMEOUT': "120m"}
+    required_input_parameters = {'ips_to_scan': None}
+    optional_input_parameters = {'timeout': '120m'}
     output_parameters = {'RHOSTS': None}
 
-    def __init__(self, info):
-        """
-        This phase scans the list of IPs specified by the `ips_to_scan` parameter in order to identify
-        which of those IPs are up and running. If a system not specified in the `expected_ips_up` variable is found
-        this phase will be successful.
 
-        The main use case for this phase is to mimic an attacker that tries to access a network and figure out what systems
-        are available. If the attacker could find more systems than those expected by the sysadmin, then the attacker would
-        be successful.
+    def __init__(self,info):
+        AbstractCircadencePhase.__init__(self,info=info)
+        ips_to_scan = self.PhaseResult['ips_to_scan']
+        timeout = self.PhaseResult['timeout']
 
-        :param is_phase_critical (bool): Variable specifying if this phase outcome will affect the outcome
-        :param ips_to_scan (list): A list of IPs to be scanned
-        :param expected_ips_up (list): The IPs that are expected to be up and running
-        :param timeout (list): The maximum amount of time
-        :return (bool):
-        """
-        AbstractCircadencePhase.__init__(self, info=info)
-
-        assert 'RHOSTS' in info
-        assert 'EXPECTED_RHOSTS' in info
-
-    def Setup(self):
-
-        self.ips_to_scan = []
-        self.setup_network_to_scan_parameter(self.PhaseResult['RHOSTS'])
-        self.expected_ips_up = self.setup_expected_alive_ips_parameter(self.PhaseResult['EXPECTED_RHOSTS'])
-        self.timeout = self.setup_timeout(self.PhaseResult['TIMEOUT'])
-        self.forbidden_alive_hosts = []
+        self.ips_to_scan = self.setup_ips_to_scan(ips_to_scan)
+        self.timeout = self.setup_timeout(timeout)
         self.task = ''
         self.percentage = ''
-        self._rhosts = ''
 
+    def Setup(self):
+        if not self.ips_to_scan:
+            self.PhaseReporter.Error('IPs to Scan parameter is not valid')
+            return False
+        if not self.timeout:
+            self.PhaseReporter.Error("Timeout parameter is not valid")
+            return False
         return True
 
     def Run(self):
         logging.debug('Executing Run')
         phase_successful = self.execute_phase()
-        self._progress = 100
         self.log_phase_result(phase_successful)
-
-        self.PhaseResult['RHOSTS'] = self._rhosts
         return phase_successful
 
     def execute_phase(self):
@@ -66,16 +48,12 @@ class HostDiscoveryPhaseClass(AbstractCircadencePhase):
         try:
             start = time.time()
             self.PhaseReporter.Info('Using Nmap to scan network for alive hosts')
-
-            alive_hosts_found = NmapUtilsClass.GetAliveHosts(self.ips_to_scan, callback=self.alive_hosts_callback,
-                                                             timeout=self.timeout)
+            alive_hosts_found = NmapUtilsClass.GetAliveHosts(self.ips_to_scan, callback=self.alive_hosts_callback, timeout=self.timeout)
             end = time.time()
-            logging.info(
-                'Checking available hosts took {:.2f} minutes. If this value is greater than the timeout ({}), the scan results might not be correct'.format(
-                    (end - start) / 60, self.timeout))
-            self._rhosts = alive_hosts_found
-            self.PhaseReporter.Info(alive_hosts_found)
-            # phase_successful = self.check_results(alive_hosts_found)
+            logging.info('Checking available hosts took {:.2f} minutes. If this value is greater than the timeout ({}), the scan results might not be correct'.format((end-start)/60, self.timeout))
+            self.PhaseResult['RHOSTS'] = alive_hosts_found
+            if alive_hosts_found:
+                phase_successful = True
         except Exception as e:
             self.PhaseReporter.Error('An unexpected error occurred while scanning for available hosts: {0}'.format(e))
         return phase_successful
@@ -93,31 +71,11 @@ class HostDiscoveryPhaseClass(AbstractCircadencePhase):
                     self.percentage = nmap_task.progress
                     logging.info("{0}: {1}%".format(nmap_task.name, nmap_task.progress))
 
-    def check_results(self, alive_hosts_found):
-        logging.debug('Executing check_results. alive_hosts_found: {}'.format(', '.join(alive_hosts_found)))
-        success = False
-        self.forbidden_alive_hosts = list(set(alive_hosts_found) - set(self.expected_ips_up))
-        if self.forbidden_alive_hosts:
-            success = True
-        return success
 
-    def setup_network_to_scan_parameter(self, network_to_scan):
-        logging.debug('Executing setup_network_to_scan_parameter')
-        success = False
-        self.ips_to_scan = NetworkUtils.GetIPList(network_to_scan)
-        if self.ips_to_scan:
-            success = True
-        else:
-            self.PhaseReporter.Error(
-                'Network to Scan parameter: "{}" could not be converted to a list of IPs. Network should be set in CIDR format.'.format(
-                    self.network_to_scan_parameter))
-        return success
-
-    def setup_expected_alive_ips_parameter(self, expected_alive):
-        logging.debug('Executing setup_expected_alive_ips_parameter')
-        self.expected_alive_ips = [ip.strip() for ip in expected_alive.split(
-            ',')]  # ip format is not checked. That's left for Nmap
-        return True
+    def setup_ips_to_scan(self, ips_to_scan):
+        logging.debug('Executing setup_ips_to_scan. ips_to_scan: {}(trucated to 10. len: {})'.format(ips_to_scan[:10], len(ips_to_scan)))
+        logging.info('IPs to Scan parameter: {}'.format(', '.join(ips_to_scan)))
+        return NetworkUtils.GetIPList(ips_to_scan)
 
     def setup_timeout(self, timeout):
         logging.debug('Executing setup_timeout. timeout: {}'.format(timeout))
@@ -145,31 +103,24 @@ class HostDiscoveryPhaseClass(AbstractCircadencePhase):
             number = int(re.search(r'\d+', timeout.strip()).group())
             unit = re.search(r'\D+', timeout.strip()).group().lower()
             if not (unit == 'ms' or unit == 's' or unit == 'm' or unit == 'h'):
-                self.PhaseReporter.Error(
-                    'Timeout parameter is not in the correct format. Valid examples: {}. Received: {}'.format(
-                        '1m, 1000ms, 2h', timeout))
+                self.PhaseReporter.Error('Timeout parameter is not in the correct format. Valid examples: {}. Received: {}'.format('1m, 1000ms, 2h', timeout))
                 unit = None
         except:
-            self.PhaseReporter.Error(
-                'Timeout parameter is not in the correct format. Valid examples: {}. Received: {}'.format(
-                    '1m, 1000ms, 2h', timeout))
+            self.PhaseReporter.Error('Timeout parameter is not in the correct format. Valid examples: {}. Received: {}'.format('1m, 1000ms, 2h', timeout))
         return number, unit
 
     def log_phase_result(self, success):
         logging.debug('Executing log_phase_results. success: {}'.format(success))
         if success:
-            self.PhaseReporter.Info(
-                'Host discovery attack was successful. Alive hosts were found in the scanned network')
-            self.PhaseReporter.Report(
-                'After scanning the network for alive hosts, the following unexpected hosts were found running: {}'.format(
-                    ', '.join(self.forbidden_alive_hosts)))
+            self.PhaseReporter.Info('Host discovery attack was successful. Alive hosts were found in the scanned network')
+            self.PhaseReporter.Report('After scanning the network for alive hosts, the following hosts were found running: {}'.format(', '.join(self.PhaseResult['RHOSTS'])))
         else:
             extra_info = ' Only the expected hosts were found alive' if self.expected_ips_up else ' No alive host were found'
             self.PhaseReporter.Info('Host discovery attack failed.{}'.format(extra_info))
 
 def create(info):
     """
-        Create a new instance of the stage object.
-        @return: instance of the stage object
+        Create a new instance of the phase
     """
+
     return HostDiscoveryPhaseClass(info)

@@ -8,16 +8,16 @@ import logging
 from abstract_circadence_phase import AbstractCircadencePhase
 
 class HostPortScan(AbstractCircadencePhase):
-    TrackerId = "PHS-e79ea5e8-5aac-11e7-b3e3-000c29c2ba76"
-    Subject = "nmap_port_scanning_phase"
+    TrackerId = "464"
+    Subject = "Test"
     Description =   """
                     This phase executes an nmap scan and returns all open
                     ports along with services on those ports
                     """
     
-    required_input_parameters = {'RHOSTS': [], 'search_start': int(), 'search_end': int(), 'desired_port': int()}
+    required_input_parameters = {'RHOSTS': None, 'search_start': None, 'search_end': None}
     optional_input_parameters = {'additional_nmap_args':""}
-    output_parameters = {'port_list': [], 'RHOSTS': []}
+    output_parameters = {'port_list': []}
 
     def __init__(self, info):
         """
@@ -42,8 +42,6 @@ class HostPortScan(AbstractCircadencePhase):
         self._extra_args = ''
         if 'additional_nmap_args' in self.PhaseResult:
             self._extra_args = self.PhaseResult['additional_nmap_args']
-        if 'desired_port' in self.PhaseResult:
-            self._desired_port = int(self.PhaseResult['desired_port'])
 
         return True
 
@@ -60,22 +58,11 @@ class HostPortScan(AbstractCircadencePhase):
             nm.scan(host, self._search_start + '-' + self._search_end)
             try:
                 ports_list[host] = nm[host]['tcp'].keys()
-                self.PhaseReporter.Info('Found {0} ports active on {1}'.format(len(ports_list), host))
+                self.PhaseReporter.Report('Found ports {0} active on {1}'.format(", ".join(str(port) for port in ports_list[host]), host))
             except KeyError:
-                self.PhaseReporter.Info('No ports found for host: {}'.format(host))
+                self.PhaseReporter.Report('No ports found for host: {}'.format(host))
 
 
-        ips = []
-
-        if self._desired_port:
-            for ip in ports_list:
-                print(ip)
-                for port in ports_list[ip]:
-                    if port == self._desired_port:
-                        self.PhaseReporter.Info('Desired port {} found on {}'.format(self._desired_port,ip))
-                        ips.append(ip)
-
-        self.PhaseResult['RHOSTS'] = ips
         self.PhaseResult['port_list'] = ports_list
 
         self._progress = 100

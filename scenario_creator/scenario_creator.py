@@ -12,6 +12,7 @@ import inspect
 import errno
 import traceback
 import glob
+import subprocess
 
 root_directory = os.path.dirname(os.path.realpath(__file__))
 
@@ -38,7 +39,6 @@ def get_parameters(args):
         Return dictionaries of required and optional parameters
 
     """
-
     req_params = {}
     opt_params = {}
 
@@ -119,7 +119,7 @@ def build_cookiecutter(args):
                     "scenario_name": args.scenario_name,
                     "scenario_class_name": args.scenario_name + "ScenarioClass",
                     "scenario_description": args.description,
-                    "scenario_guid": str(uuid.uuid4),
+                    "scenario_guid": str(uuid.uuid4()),
                     "supported_platforms": '',
                     "phases": '\n'.join(args.phase_list)
                     }
@@ -137,7 +137,6 @@ def filter_imports(args):
     """
         Check if any external imports are needed
     """
-
     phase_list = args.phase_list
 
     imports = []
@@ -196,6 +195,13 @@ def main():
         module = os.path.join(root_directory, "bin/",ext_import)
         for data in glob.glob(module + "*"):
             shutil.copy(module, os.path.join(scenario_dir, "bin"))
+
+    # Generate descriptor.processed
+    os.chdir(scenario_dir)
+    os.system('python main.py')
+
+    # Generate zip file
+    os.system('zip -q -r {}.zip *'.format(args.scenario_name))
 
 
 if __name__ == '__main__':

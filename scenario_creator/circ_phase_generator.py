@@ -112,9 +112,9 @@ def generate_init(req_inputs, opt_inputs):
     init = ""
 
     for req in req_inputs.keys():
-        init += "\t{0} = self.PhaseResult['{0}']\n".format(req)
+        init += "        {0} = self.PhaseResult['{0}']\n".format(req)
     for opt in opt_inputs:
-        init += "\t{0} = self.PhaseResult['{0}']\n".format(opt)
+        init += "        {0} = self.PhaseResult['{0}']\n".format(opt)
 
     return init
 

@@ -90,7 +90,7 @@ class NmapUtilsClass(object):
         :param nmapPath: String specifying the location of the nmap binary (including the filename).
         :return: List of IPs that are up
         """
-        logging.info('Scanning alive hosts...')
+        logging.info('Scanning alive hosts....')
         if not ips:
             ips = [HostInfo.BuildLocalIPCIDRBlock()]
         NmapUtilsClass._CheckIPsParameter(ips)
@@ -457,6 +457,7 @@ class NmapUtilsClass(object):
         :param timeout: Host timeout value. Default 1 minute.
         :return: The Nmap report object as defined in https://libnmap.readthedocs.org/en/latest/objects/nmapreport.html
         """
+
         nmapProcess = NmapProcess(ips,
                                   '--host-timeout {} {}'.format(timeout, parameters),
                                   callback,

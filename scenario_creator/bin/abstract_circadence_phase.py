@@ -11,7 +11,7 @@ class AbstractCircadencePhase(AbstractPhaseClass):
                     C{Subject},
                     C{Description} attributes
     """
-    TrackerId = 'AbstractCircadencePhase'
+    TrackerId = 'AbstractCircadencePhase' # Generate UUID
     Subject = 'AbstractCircadencePhase'
     Description =   """
                     AbstractCircadencePhase is the base class for all

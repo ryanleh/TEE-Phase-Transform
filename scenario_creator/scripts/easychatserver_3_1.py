@@ -21,7 +21,7 @@ class EasyChat(AbstractCircadencePhase):
                     user located on an EasyChat server version 3.1
                     """
 
-    required_input_parameters = {'RHOSTS': None, 'username': None}
+    required_input_parameters = {'RHOST': None, 'username': None}
     optional_input_parameters = {}
     output_parameters = {'password': None}
 
@@ -69,14 +69,14 @@ class EasyChat(AbstractCircadencePhase):
         x = ''.join(password)
 
         password = x.replace("[", "")
-        password = x.replace("]", "")
+        password = password.replace("]", "")
 
         assert password is not None and len(password) > 0
 
         self._progress = 100
         self.PhaseResult['password'] = password
 
-        self.PhaseReporter.Info("Found user= {0}; password= {1}".format(self._username, password))
+        self.PhaseReporter.Report("Found user= {0}; password= {1}".format(self._username, password))
         return True
 
 

@@ -8,38 +8,49 @@
             "form": [
                 {
                     "type": "text", 
-                    "key": "ip"
+                    "key": "commaSeparatedListOfFilePatterns"
                 }, 
                 {
                     "type": "text", 
-                    "key": "message"
+                    "key": "maximumFileCount"
                 }, 
                 {
                     "type": "text", 
-                    "key": "port"
+                    "key": "commaSeparatedListOfFolderPatterns"
+                }, 
+                {
+                    "type": "text", 
+                    "key": "maximumCumulativeSize"
                 }
             ], 
             "schema": {
                 "required": [
-                    "ip", 
-                    "port"
+                    "commaSeparatedListOfFilePatterns", 
+                    "maximumFileCount", 
+                    "commaSeparatedListOfFolderPatterns", 
+                    "maximumCumulativeSize"
                 ], 
                 "type": "object", 
                 "properties": {
-                    "ip": {
+                    "commaSeparatedListOfFilePatterns": {
                         "default": null, 
                         "type": "string", 
-                        "title": "ip"
+                        "title": "commaSeparatedListOfFilePatterns"
                     }, 
-                    "message": {
-                        "default": "Hello World!", 
-                        "type": "string", 
-                        "title": "message"
-                    }, 
-                    "port": {
+                    "maximumFileCount": {
                         "default": null, 
                         "type": "string", 
-                        "title": "port"
+                        "title": "maximumFileCount"
+                    }, 
+                    "commaSeparatedListOfFolderPatterns": {
+                        "default": null, 
+                        "type": "string", 
+                        "title": "commaSeparatedListOfFolderPatterns"
+                    }, 
+                    "maximumCumulativeSize": {
+                        "default": null, 
+                        "type": "string", 
+                        "title": "maximumCumulativeSize"
                     }
                 }
             }, 
