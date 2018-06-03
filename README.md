@@ -1,2 +1,2 @@
-# projects
--Cookiecutter automation that transforms attack vector phase from FireDrill framework into the new Circadence defined AbstractPhase
+# TEE-Phase-Transform
+Transformer from FireDrill --> TEE phase structure using Cookiecutter 
